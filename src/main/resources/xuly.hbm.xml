@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="error.mavenproject4.xuly" table="xuly">      
+        <id name="maXL" type="int" column="MaXL">
+            <generator class="native"/>
+        </id>
+        <property name="maTV" column="MaTV" type="int"/>
+        <property name="hinhThucXL" column="HinhThucXL" type="string"/>
+        <property name="soTien" column="SoTien" type="int"/>
+        <property name="ngayXL" column="NgayXL" type="date"/>
+        <property name="trangThaiXL" column="TrangThaiXL" type="int"/>
+    </class>
+
+</hibernate-mapping>

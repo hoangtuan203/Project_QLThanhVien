@@ -38,4 +38,5 @@
             <version>5.4.7.Final</version>
         </dependency>
     </dependencies>
+    <name>QL_ThanhVien</name>
 </project>

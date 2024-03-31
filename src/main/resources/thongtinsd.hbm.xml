@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="error.mavenproject4.thongtinsd" table="thongtinsd">      
+        <id name="maTT" type="int" column="MaTT">
+            <generator class="native"/>
+        </id>
+        <property name="maTV" column="MaTV" type="int"/>
+        
+        <property name="maTB" column="MaTB" type="int"/>
+
+        <property name="tgVao" column="TGVao" type="date"/>
+        
+        <property name="tgMuon" column="TGMuon" type="date"/>
+        
+        <property name="tgTra" column="TGTra" type="date"/>
+
+    </class>
+</hibernate-mapping>

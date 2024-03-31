@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="error.mavenproject4.thanhvien" table="thanhvien">      
+        <id name="maTV" type="int" column="MaTV">
+            <generator class="native"/>
+        </id>
+        <property name="hoTen" column="HoTen" type="string"/>
+        
+        <property name="khoa" column="Khoa" type="string"/>
+
+        <property name="nganh" column="Nganh" type="string"/>
+        <property name="sdt" column="SDT" type="int"/>
+    </class>
+</hibernate-mapping>

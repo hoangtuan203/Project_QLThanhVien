@@ -4,7 +4,7 @@
         <!-- SQL dialect -->
         <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/school?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=utf8</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/qlthanhvien?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=utf8</property>
         <property name="connection.username">root</property>
         <property name="connection.password"></property>
         <!-- JDBC connection pool (use the built-in) -->
@@ -18,6 +18,9 @@
         <!-- Entity mapping -->
         <!-- Thêm tên package chứa các entity classes vào cấu hình -->
         <mapping package="main.resources"/>
-        <mapping resource="Department.hbm.xml"/>
+        <mapping resource="thanhvien.hbm.xml"/>
+        <mapping resource="thietbi.hbm.xml"/>
+        <mapping resource="xuly.hbm.xml"/>
+        <mapping resource="thongtinsd.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
