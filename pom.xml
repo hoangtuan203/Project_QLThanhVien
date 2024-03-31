@@ -13,8 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <exec.mainClass>error.mavenproject4</exec.mainClass>
-        <dept.hbm.xml.path>src/main/resources/dempartment.hbm.xml</dept.hbm.xml.path>
+        <exec.mainClass>QL_ThanhVien</exec.mainClass>
     </properties>
     <dependencies>
         <dependency>

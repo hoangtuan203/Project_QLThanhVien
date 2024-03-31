@@ -35,13 +35,13 @@ public class Test {
         }
         if (factory != null) {
             Test hb = new Test(factory);
-            hb.listInformationUsage();
+            hb.listDevice();
         } else {
             System.out.println("Failed to initialize SessionFactory.");
         }
     }
 
-    public void listDepartment() {
+    public void listDevice() {
         Session session = factory.openSession();
         Transaction tx = null;
         try {

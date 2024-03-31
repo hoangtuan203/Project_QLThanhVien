@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="error.mavenproject4.thongtinsd" table="thongtinsd">      
+    <class name="DAL.thongtinsd" table="thongtinsd">      
         <id name="maTT" type="int" column="MaTT">
             <generator class="native"/>
         </id>

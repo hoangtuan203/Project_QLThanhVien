@@ -5,7 +5,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-    <class name="error.mavenproject4.thietbi" table="thietbi">      
+    <class name="DAL.thietbi" table="thietbi">      
       
         <id name = "maTB" type = "int" column = "MaTB">
             <generator class="native"/>
