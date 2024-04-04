@@ -3,7 +3,7 @@
 <hibernate-mapping>
     <class name="DAL.xuly" table="xuly">      
         <id name="maXL" type="int" column="MaXL">
-            <generator class="native"/>
+<!--            <generator class="native"/>-->
         </id>
         <property name="maTV" column="MaTV" type="int"/>
         <property name="hinhThucXL" column="HinhThucXL" type="string"/>
