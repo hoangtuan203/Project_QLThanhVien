@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Data;
 
 /**
  *
@@ -22,7 +21,6 @@ import lombok.Data;
 public class thietbi implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaTB")
     private int maTB;
     @Column(name = "TenTB")
@@ -62,6 +60,4 @@ public class thietbi implements Serializable {
     public void setMoTaTB(String moTaTB) {
         this.moTaTB = moTaTB;
     }
-    
-    
 }

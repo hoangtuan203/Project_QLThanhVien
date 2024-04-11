@@ -3,7 +3,7 @@
 <hibernate-mapping>
     <class name="DAL.thongtinsd" table="thongtinsd">      
         <id name="maTT" type="int" column="MaTT">
-            <generator class="native"/>
+<!--            <generator class="native"/>-->
         </id>
         <property name="maTV" column="MaTV" type="int"/>
         

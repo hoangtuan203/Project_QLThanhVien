@@ -8,7 +8,7 @@
     <class name="DAL.thietbi" table="thietbi">      
       
         <id name = "maTB" type = "int" column = "MaTB">
-            <generator class="native"/>
+<!--            <generator class="native"/>-->
         </id>
       
         <property name = "tenTB" column = "TenTB" type = "string"/>

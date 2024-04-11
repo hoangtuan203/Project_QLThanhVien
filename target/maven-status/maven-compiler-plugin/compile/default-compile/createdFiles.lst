@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 GUI\addxuly$1.class
 GUI\PanelXuLy$5.class
 DAL\thanhvien.class
 GUI\addxuly$8.class
 GUI\addxuly$6.class
+=======
+GUI\HomeGUI$4.class
+DAL\thanhvien.class
+GUI\PaneThanhVien.class
+DAL\xuly.class
+DAL\thongtinsd.class
+>>>>>>> 89b0c7306aa7eb40e22b852977905cc5a61d2fd2
 GUI\HomeGUI$5.class
+GUI\PanelXuLy.class
 GUI\PaneThietBi.class
 GUI\addxuly$3.class
 GUI\Test.class
@@ -11,6 +20,7 @@ GUI\HomeGUI.class
 DAL\thietbi.class
 GUI\PanelXuLy$2.class
 GUI\HomeGUI$1.class
+<<<<<<< HEAD
 GUI\addxuly$9$1.class
 GUI\HomeGUI$3.class
 DAL\HibernateUtil.class
@@ -32,3 +42,8 @@ GUI\PanelXuLy$1.class
 GUI\PanelXuLy$3.class
 GUI\PanelXuLy$6.class
 GUI\addxuly$9.class
+=======
+GUI\HomeGUI$2.class
+GUI\PanelThongKe.class
+GUI\HomeGUI$3.class
+>>>>>>> 89b0c7306aa7eb40e22b852977905cc5a61d2fd2

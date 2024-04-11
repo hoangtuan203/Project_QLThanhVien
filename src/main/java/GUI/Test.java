@@ -3,6 +3,7 @@
  */
 package GUI;
 
+import DAL.thanhvien;
 import DAL.thietbi;
 import DAL.thongtinsd;
 import DAL.xuly;
@@ -35,12 +36,19 @@ public class Test {
         }
         if (factory != null) {
             Test hb = new Test(factory);
+<<<<<<< HEAD
             hb.listHandle();
+=======
+            hb.listDevice();
+            hb.add();
+            System.out.println("List new :");
+            hb.listDevice();
+
+>>>>>>> 89b0c7306aa7eb40e22b852977905cc5a61d2fd2
         } else {
             System.out.println("Failed to initialize SessionFactory.");
         }
     }
-
     public void listDevice() {
         Session session = factory.openSession();
         Transaction tx = null;
@@ -63,7 +71,6 @@ public class Test {
             session.close();
         }
     }
-
     public void listHandle() {
         Session session = factory.openSession();
         Transaction tx = null;
@@ -102,7 +109,7 @@ public class Test {
                 System.out.print("ma TV: " + employee.getMaTV());
                 System.out.println("Ma Tb: " + employee.getMaTB());
                 System.out.print("date vao: " + employee.getTgVao());
-                System.out.print("  date muon: " + employee.getTgMuon());
+                System.out.print("date muon: " + employee.getTgMuon());
                 System.out.println("  date tra: " + employee.getTgTra());
             }
             tx.commit();
@@ -111,6 +118,52 @@ public class Test {
                 tx.rollback();
             }
             e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+    public void listThanhVien() {
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            List employees = session.createQuery("FROM thanhvien").list();
+            for (Iterator iterator = employees.iterator(); iterator.hasNext();) {
+                thanhvien employee = (thanhvien) iterator.next();
+                System.out.print("ma TV: " + employee.getMaTV());
+                System.out.print("ho ten: " + employee.getHoTen());
+                System.out.println("khoa: " + employee.getKhoa());
+                System.out.print("nganh : " + employee.getNganh());
+                System.out.print("sdt: " + employee.getSdt());
+              
+            }
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+    public void add(){
+        Session session = factory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            thietbi tb = new thietbi();
+            int a = 1000004;
+            tb.setMaTB(a);
+            tb.setTenTB("a");
+            tb.setMoTaTB("test");
+            session.save(tb);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+                e.printStackTrace();
+            }
         } finally {
             session.close();
         }
