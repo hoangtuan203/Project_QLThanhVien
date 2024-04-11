@@ -4,6 +4,22 @@
  */
 package GUI;
 
+import DAL.xuly;
+import DAL.xulyDAL;
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ASUS
@@ -15,6 +31,31 @@ public class PanelXuLy extends javax.swing.JPanel {
      */
     public PanelXuLy() {
         initComponents();
+        displaytablexuly();
+        addTableSelectionListener();
+        // Đặt sự kiện cho checkBox1
+        addchecke0SelectionListener();
+
+    }
+
+    public void displaytablexuly() {
+        List<xuly> display = xulyDAL.selectAll();
+        DefaultTableModel model = (DefaultTableModel) tablexuly.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+        for (xuly i : display) {
+            Object[] row = {
+                stt++,
+                i.getMaXL(),
+                i.getMaTV(),
+                i.getHinhThucXL(),
+                i.getSoTien(),
+                i.getNgayXL(),
+                i.getTrangThaiXL()
+
+            };
+            model.addRow(row);
+        }
     }
 
     /**
@@ -26,30 +67,261 @@ public class PanelXuLy extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablexuly = new javax.swing.JTable();
+        jTextField1 = new javax.swing.JTextField();
+        button1 = new java.awt.Button();
+        jPanel1 = new javax.swing.JPanel();
+        button5 = new java.awt.Button();
+        button7 = new java.awt.Button();
+        button8 = new java.awt.Button();
+        txtmatv = new javax.swing.JTextField();
+        txtsotien = new javax.swing.JTextField();
+        txthinhthuc = new javax.swing.JTextField();
+        txtngay = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        cbox0 = new javax.swing.JCheckBox();
+        cbox1 = new javax.swing.JCheckBox();
+        txtsotien1 = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
 
-        jLabel1.setText("Xử lý");
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(300, 300, 300)
-                .addComponent(jLabel1)
-                .addContainerGap(337, Short.MAX_VALUE))
+        tablexuly.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Số thứ tự ", "Mã xử lý", "Mã thành viên", "Hình thức xử lí", "Số tiền ", "Ngày", "Trạng thái"
+            }
+        ));
+        tablexuly.setName("tablexuly"); // NOI18N
+        jScrollPane1.setViewportView(tablexuly);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 1141, 309));
+        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(774, 19, 280, 35));
+
+        button1.setLabel("Tìm kiếm");
+        add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1064, 19, 80, 35));
+
+        button5.setLabel("Xóa");
+        button5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button5ActionPerformed(evt);
+            }
+        });
+
+        button7.setLabel("Thêm");
+        button7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button7ActionPerformed(evt);
+            }
+        });
+
+        button8.setLabel("Sửa");
+        button8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button8ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(115, 115, 115)
+                .addComponent(button7, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(188, 188, 188)
+                .addComponent(button8, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(139, 139, 139))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(jLabel1)
-                .addContainerGap(369, Short.MAX_VALUE))
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(button7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(button8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 673, 1141, 60));
+        add(txtmatv, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 440, 240, 40));
+        add(txtsotien, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 520, 240, 40));
+        add(txthinhthuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 440, 230, 40));
+        add(txtngay, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 520, 230, 40));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel12.setText("Mã thành viên :");
+        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 440, 140, 40));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel13.setText("Số tiền : ");
+        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, 140, 40));
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel14.setText("Hình thức xử lí :");
+        add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 440, 150, 40));
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel15.setText("Ngày xử lí :");
+        add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 520, 150, 40));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setText("Trạng thái :");
+        add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 590, 90, 40));
+
+        cbox0.setText("0");
+        add(cbox0, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 590, -1, 40));
+
+        cbox1.setText("1");
+        add(cbox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 590, -1, 40));
+        add(txtsotien1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 520, 240, 40));
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel17.setText("Số tiền : ");
+        add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, 140, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void button7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button7ActionPerformed
+        addxuly add = new addxuly();
+        add.setVisible(true);
+    }//GEN-LAST:event_button7ActionPerformed
+
+    private void button5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button5ActionPerformed
+        xulyDAL xulydel = new xulyDAL();
+        int i = tablexuly.getSelectedRow();
+        if (i >= 0) {
+            int maxl = (Integer) tablexuly.getValueAt(i, 1);
+            xuly delxl = xulydel.selectxulybymaxl(maxl);
+            if (xulydel.delete(delxl)) {
+                JOptionPane.showMessageDialog(this, "Xóa xử lý thành công");
+            } else {
+                JOptionPane.showMessageDialog(this, "thất bại");
+            }
+            displaytablexuly();
+        } else {
+            JOptionPane.showMessageDialog(this, "vui lòng chọn đối tượng trước khi xóa");
+        }
+    }//GEN-LAST:event_button5ActionPerformed
+
+    private void button8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button8ActionPerformed
+        xulyDAL xulyupdate = new xulyDAL();
+        int i = tablexuly.getSelectedRow();
+        if (i >= 0) {
+            int maxl = (Integer) tablexuly.getValueAt(i, 1);
+            int matv = Integer.parseInt(txtmatv.getText());
+            String hinhthuc = txthinhthuc.getText();
+            int sotien = Integer.parseInt(txtsotien.getText());
+            Date date;
+            try {
+                date = new SimpleDateFormat("dd/MM/yyyy").parse(txtngay.getText());
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Ngày không hợp lệ");
+                return;
+            }
+            int trangthai = cbox0.isSelected() ? 0 : 1;
+            if (xulyupdate.update(new xuly(maxl, matv, hinhthuc, sotien, date, trangthai))) {
+                JOptionPane.showMessageDialog(this, "Sửa xử lý thành công");
+            } else {
+                JOptionPane.showMessageDialog(this, "Sửa xử lý thất bại");
+            }
+            displaytablexuly();
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn đối tượng trước khi sửa");
+        }
+
+    }//GEN-LAST:event_button8ActionPerformed
+
+    private void addTableSelectionListener() {
+        tablexuly.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent event) {
+                if (!event.getValueIsAdjusting()) {
+                    int selectedRow = tablexuly.getSelectedRow();
+                    if (selectedRow != -1) {
+                        showSelectedRowData(selectedRow);
+                    }
+                }
+            }
+        });
+    }
+
+    private void addchecke0SelectionListener() {
+        // Đặt sự kiện cho checkBox1
+        cbox0.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    cbox1.setSelected(false); // Nếu checkBox1 được chọn, đặt checkBox2 là false
+                }
+
+            }
+        });
+        cbox1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    cbox0.setSelected(false); // Nếu checkBox1 được chọn, đặt checkBox2 là false
+                }
+
+            }
+        });
+    }
+
+    private void showSelectedRowData(int selectedRow) {
+        int matv = (Integer) tablexuly.getValueAt(selectedRow, 2);
+        System.out.println(matv);
+        String hinhthuc = (String) tablexuly.getValueAt(selectedRow, 3);
+        System.out.println(hinhthuc);
+        Integer sotien = (Integer) tablexuly.getValueAt(selectedRow, 4);
+        System.out.println(sotien);
+        Date ngay = (Date) tablexuly.getValueAt(selectedRow, 5);
+        int trangthai = (Integer) (tablexuly.getValueAt(selectedRow, 6));
+        txtmatv.setText(matv + "");
+        txthinhthuc.setText(hinhthuc);
+        txtngay.setText(ngay + "");
+        txtsotien.setText(sotien + "");
+        if (trangthai == 1) {
+            cbox1.setSelected(true);
+            cbox0.setSelected(false);
+        } else {
+            cbox0.setSelected(true);
+            cbox1.setSelected(false);
+        }
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private java.awt.Button button1;
+    private java.awt.Button button5;
+    private java.awt.Button button7;
+    private java.awt.Button button8;
+    private javax.swing.JCheckBox cbox0;
+    private javax.swing.JCheckBox cbox1;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tablexuly;
+    private javax.swing.JTextField txthinhthuc;
+    private javax.swing.JTextField txtmatv;
+    private javax.swing.JTextField txtngay;
+    private javax.swing.JTextField txtsotien;
+    private javax.swing.JTextField txtsotien1;
     // End of variables declaration//GEN-END:variables
+
 }

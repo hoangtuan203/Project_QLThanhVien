@@ -26,9 +26,9 @@ import javax.persistence.Temporal;
 @Table(name = "xuly")
 public class xuly implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int maXL;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private int maXL;
 
     @ManyToOne
     @JoinColumn(name = "maTV")
@@ -36,7 +36,7 @@ public class xuly implements Serializable {
 
     private String hinhThucXL;
 
-    private int soTien;
+    private Integer soTien;
 
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date ngayXL;
@@ -47,7 +47,7 @@ public class xuly implements Serializable {
     }
 
     public xuly(int maXL, int maTV, String hinhThucXL, int soTien, Date ngayXL, int trangThaiXL) {
-        this.maXL = maXL;
+        
         this.maTV = maTV;
         this.hinhThucXL = hinhThucXL;
         this.soTien = soTien;
@@ -79,11 +79,11 @@ public class xuly implements Serializable {
         this.hinhThucXL = hinhThucXL;
     }
 
-    public int getSoTien() {
+    public Integer getSoTien() {
         return soTien;
     }
 
-    public void setSoTien(int soTien) {
+    public void setSoTien(Integer soTien) {
         this.soTien = soTien;
     }
 

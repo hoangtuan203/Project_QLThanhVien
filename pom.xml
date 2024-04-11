@@ -36,6 +36,11 @@
             <artifactId>hibernate-core</artifactId>
             <version>5.4.7.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE190</version>
+        </dependency>
     </dependencies>
     <name>QL_ThanhVien</name>
 </project>

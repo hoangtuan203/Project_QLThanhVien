@@ -35,7 +35,7 @@ public class Test {
         }
         if (factory != null) {
             Test hb = new Test(factory);
-            hb.listDevice();
+            hb.listHandle();
         } else {
             System.out.println("Failed to initialize SessionFactory.");
         }
