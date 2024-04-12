@@ -196,6 +196,7 @@ public class PanelXuLy extends javax.swing.JPanel {
 
     private void button7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button7ActionPerformed
         addxuly add = new addxuly();
+        add.setLocationRelativeTo(null);
         add.setVisible(true);
     }//GEN-LAST:event_button7ActionPerformed
 

@@ -36,15 +36,15 @@ public class Test {
         }
         if (factory != null) {
             Test hb = new Test(factory);
-<<<<<<< HEAD
+
             hb.listHandle();
-=======
+
             hb.listDevice();
             hb.add();
             System.out.println("List new :");
             hb.listDevice();
 
->>>>>>> 89b0c7306aa7eb40e22b852977905cc5a61d2fd2
+
         } else {
             System.out.println("Failed to initialize SessionFactory.");
         }
