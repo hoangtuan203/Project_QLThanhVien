@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 24, 2024 lúc 03:41 PM
--- Phiên bản máy phục vụ: 10.4.32-MariaDB
--- Phiên bản PHP: 8.0.30
+-- Host: 127.0.0.1
+-- Generation Time: Apr 14, 2024 at 03:19 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Cơ sở dữ liệu: `qlthanhvien`
+-- Database: `qlthanhvien`
 --
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `thanhvien`
+-- Table structure for table `thanhvien`
 --
 
 CREATE TABLE `thanhvien` (
@@ -32,23 +32,25 @@ CREATE TABLE `thanhvien` (
   `HoTen` varchar(100) NOT NULL,
   `Khoa` varchar(100) DEFAULT NULL,
   `Nganh` varchar(100) DEFAULT NULL,
-  `SDT` int(10) DEFAULT NULL
+  `SDT` varchar(15) DEFAULT NULL,
+  `Password` varchar(10) NOT NULL,
+  `Email` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `thanhvien`
+-- Dumping data for table `thanhvien`
 --
 
-INSERT INTO `thanhvien` (`MaTV`, `HoTen`, `Khoa`, `Nganh`, `SDT`) VALUES
-(1120150184, 'Trần Thị Nữ', 'GDTH', 'GDTH', 1111111111),
-(1121530087, 'Trần Thiếu Nam', 'TLH', 'QLGD', 1111111112),
-(1123330257, 'Ngô Tuyết Nhi', 'QTKD', 'QTKD', 1111111113),
-(2147483647, 'Nguyễn Văn Nam', 'CNTT', 'HTTT', 123456789);
+INSERT INTO `thanhvien` (`MaTV`, `HoTen`, `Khoa`, `Nganh`, `SDT`, `Password`, `Email`) VALUES
+(1120150184, 'Trần Thị Nữ', 'GDTH', 'GDTH', '1111111111', '', ''),
+(1121530087, 'Trần Thiếu Nam', 'TLH', 'QLGD', '1111111112', '', ''),
+(1123330257, 'Ngô Tuyết Nhi', 'QTKD', 'QTKD', '1111111113', '', ''),
+(2147483647, 'Nguyễn Văn Nam', 'CNTT', 'HTTT', '123456789', '', '');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `thietbi`
+-- Table structure for table `thietbi`
 --
 
 CREATE TABLE `thietbi` (
@@ -58,18 +60,22 @@ CREATE TABLE `thietbi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `thietbi`
+-- Dumping data for table `thietbi`
 --
 
 INSERT INTO `thietbi` (`MaTB`, `TenTB`, `MoTaTB`) VALUES
 (1000001, 'Micro', 'Micro không dây MS2023'),
 (1000002, 'Micro', 'Micro không dây MS2024'),
-(1000003, 'Bảng điện tử', 'Bản điện tử trình chiếu');
+(1000003, 'Bảng điện tử', 'Bản điện tử trình chiếu'),
+(1000004, 'a', 'test'),
+(1000004, 'a', 'test'),
+(1000004, 'a', 'test'),
+(1000004, 'a', 'test');
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `thongtinsd`
+-- Table structure for table `thongtinsd`
 --
 
 CREATE TABLE `thongtinsd` (
@@ -78,21 +84,22 @@ CREATE TABLE `thongtinsd` (
   `MaTB` int(10) DEFAULT NULL,
   `TGVao` datetime DEFAULT NULL,
   `TGMuon` datetime DEFAULT NULL,
-  `TGTra` datetime DEFAULT NULL
+  `TGTra` datetime DEFAULT NULL,
+  `TGDatCho` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `thongtinsd`
+-- Dumping data for table `thongtinsd`
 --
 
-INSERT INTO `thongtinsd` (`MaTT`, `MaTV`, `MaTB`, `TGVao`, `TGMuon`, `TGTra`) VALUES
-(1, 1120150184, NULL, '2024-01-05 09:00:00', NULL, NULL),
-(2, 1123330257, 1000001, NULL, '2024-02-12 10:00:32', '2024-02-12 14:00:00');
+INSERT INTO `thongtinsd` (`MaTT`, `MaTV`, `MaTB`, `TGVao`, `TGMuon`, `TGTra`, `TGDatCho`) VALUES
+(1, 1120150184, NULL, '2024-01-05 09:00:00', NULL, NULL, NULL),
+(2, 1123330257, 1000001, NULL, '2024-02-12 10:00:32', '2024-02-12 14:00:00', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `xuly`
+-- Table structure for table `xuly`
 --
 
 CREATE TABLE `xuly` (
@@ -105,7 +112,7 @@ CREATE TABLE `xuly` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `xuly`
+-- Dumping data for table `xuly`
 --
 
 INSERT INTO `xuly` (`MaXL`, `MaTV`, `HinhThucXL`, `SoTien`, `NgayXL`, `TrangThaiXL`) VALUES
@@ -114,23 +121,17 @@ INSERT INTO `xuly` (`MaXL`, `MaTV`, `HinhThucXL`, `SoTien`, `NgayXL`, `TrangThai
 (3, 1123330257, 'Bồi thường mất tài sản', 300000, '2023-09-12 08:00:00', 0);
 
 --
--- Chỉ mục cho các bảng đã đổ
+-- Indexes for dumped tables
 --
 
 --
--- Chỉ mục cho bảng `thanhvien`
+-- Indexes for table `thanhvien`
 --
 ALTER TABLE `thanhvien`
   ADD PRIMARY KEY (`MaTV`);
 
 --
--- Chỉ mục cho bảng `thietbi`
---
-ALTER TABLE `thietbi`
-  ADD PRIMARY KEY (`MaTB`);
-
---
--- Chỉ mục cho bảng `thongtinsd`
+-- Indexes for table `thongtinsd`
 --
 ALTER TABLE `thongtinsd`
   ADD PRIMARY KEY (`MaTT`),
@@ -138,7 +139,7 @@ ALTER TABLE `thongtinsd`
   ADD KEY `MaTB` (`MaTB`);
 
 --
--- Chỉ mục cho bảng `xuly`
+-- Indexes for table `xuly`
 --
 ALTER TABLE `xuly`
   ADD PRIMARY KEY (`MaXL`),
@@ -146,18 +147,11 @@ ALTER TABLE `xuly`
   ADD KEY `MaTV_2` (`MaTV`);
 
 --
--- Các ràng buộc cho các bảng đã đổ
+-- Constraints for dumped tables
 --
 
 --
--- Các ràng buộc cho bảng `thongtinsd`
---
-ALTER TABLE `thongtinsd`
-  ADD CONSTRAINT `thongtinsd_ibfk_1` FOREIGN KEY (`MaTV`) REFERENCES `thanhvien` (`MaTV`),
-  ADD CONSTRAINT `thongtinsd_ibfk_2` FOREIGN KEY (`MaTB`) REFERENCES `thietbi` (`MaTB`);
-
---
--- Các ràng buộc cho bảng `xuly`
+-- Constraints for table `xuly`
 --
 ALTER TABLE `xuly`
   ADD CONSTRAINT `xuly_ibfk_1` FOREIGN KEY (`MaTV`) REFERENCES `thanhvien` (`MaTV`);
