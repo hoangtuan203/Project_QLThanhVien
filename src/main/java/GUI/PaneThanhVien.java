@@ -4,17 +4,33 @@
  */
 package GUI;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ASUS
  */
 public class PaneThanhVien extends javax.swing.JPanel {
 
+    private List<Date> thoiDiemVaoKhuList = new ArrayList<>();
+
     /**
      * Creates new form PaneThanhVien
      */
     public PaneThanhVien() {
         initComponents();
+//        docThoiDiemTuTep();
     }
 
     /**
@@ -26,30 +42,90 @@ public class PaneThanhVien extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        btnCheck = new javax.swing.JButton();
 
-        jLabel1.setText("thành viên");
+        btnCheck.setText("kiểm tra");
+        btnCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(349, 349, 349)
-                .addComponent(jLabel1)
-                .addContainerGap(435, Short.MAX_VALUE))
+                .addGap(261, 261, 261)
+                .addComponent(btnCheck)
+                .addContainerGap(504, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(99, 99, 99)
-                .addComponent(jLabel1)
-                .addContainerGap(422, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addComponent(btnCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(472, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
+    private void btnCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckActionPerformed
+        Date ngayVaoKhu = new Date();
+        thoiDiemVaoKhuList.add(ngayVaoKhu);
+        luuThoiDiemVaoTep();
+    }//GEN-LAST:event_btnCheckActionPerformed
+
+    public List<Date> getThoiDiemVaoKhuList() {
+        // Xóa các thời điểm hiện tại trong danh sách để tránh lặp lại khi gọi phương thức này nhiều lần
+        thoiDiemVaoKhuList.clear();
+
+        // Đọc thời điểm từ tệp tin và thêm vào danh sách
+        docThoiDiemTuTep();
+
+        return thoiDiemVaoKhuList;
+    }
+
+    private void luuThoiDiemVaoTep() {
+        try {
+            File file = new File("thoi_diem_vao_khu.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+            for (Date thoiDiem : thoiDiemVaoKhuList) {
+                writer.write(thoiDiem.toString());
+                writer.newLine();
+            }
+            writer.close(); // Đóng luồng ghi file sau khi sử dụng
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void docThoiDiemTuTep() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("thoi_diem_vao_khu.txt"))) {
+            String line;
+            SimpleDateFormat formatterInput = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); // Định dạng của đối tượng Date trong file
+            SimpleDateFormat formatterOutput = new SimpleDateFormat("dd-MM-yyyy"); // Định dạng bạn muốn lấy ra
+
+            while ((line = reader.readLine()) != null) {
+                try {
+                    Date thoiDiem = formatterInput.parse(line);
+                    String formattedDate = formatterOutput.format(thoiDiem); // Chuyển đổi thành chuỗi theo định dạng mới
+                    System.out.println("Thời điểm: " + formattedDate); // In ra để kiểm tra
+                    //thoiDiemVaoKhuList.add(thoiDiem);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnCheck;
     // End of variables declaration//GEN-END:variables
 }
