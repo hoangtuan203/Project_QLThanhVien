@@ -24,7 +24,7 @@ import javax.persistence.Table;
 public class thongtinsd implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaTT")
     private int maTT;
     @ManyToOne

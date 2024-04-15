@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.ThongKeBUS;
 import DAL.xuly;
 import DAL.xulyDAL;
 import java.awt.BorderLayout;
@@ -33,6 +34,7 @@ import org.jfree.data.statistics.HistogramDataset;
 public class PanelThongKe extends javax.swing.JPanel {
 
     PaneThanhVien pane = new PaneThanhVien();
+    ThongKeBUS thongKeBUS = new ThongKeBUS();
 
     /**
      * Creates new form PanelThongKe
@@ -40,7 +42,8 @@ public class PanelThongKe extends javax.swing.JPanel {
     public PanelThongKe() {
         initComponents();
         showPieChart();
-        showBarChart();
+//        showBarChart();
+        showLineChart();
         displaytablexuly();
     }
 
@@ -72,16 +75,27 @@ public class PanelThongKe extends javax.swing.JPanel {
     /*=============================================================================*/
     public void showLineChart() {
         //create dataset for the graph
+        List<Date> thoiDiemList = thongKeBUS.getAllDateVao();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(200, "Amount", "january");
-        dataset.setValue(150, "Amount", "february");
-        dataset.setValue(18, "Amount", "march");
-        dataset.setValue(100, "Amount", "april");
-        dataset.setValue(80, "Amount", "may");
-        dataset.setValue(250, "Amount", "june");
+        List<Integer> listQuantity = thongKeBUS.getNumberOfMembersForDate();
+
+        // Duyệt qua danh sách ngày và số lượng tương ứng
+        for (int i = 0; i < thoiDiemList.size(); i++) {
+            Date date = thoiDiemList.get(i);
+            int quantity = listQuantity.get(i);
+
+            // Kiểm tra nếu ngày trước đó trùng với ngày hiện tại
+            if (i > 0 && thoiDiemList.get(i - 1).equals(date)) {
+                // Nếu trùng, tăng giá trị quantity lên 1
+                quantity++;
+            }
+
+            // Thêm giá trị vào dataset
+            dataset.addValue(quantity, "Quantity", date);
+        }
 
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("contribution", "monthly", "amount",
+        JFreeChart linechart = ChartFactory.createLineChart("Thống Kê Số Lượng Vào Khu Học Tập", "Thời Gian", "Số Lượng",
                 dataset, PlotOrientation.VERTICAL, false, true, false);
 
         //create plot object
@@ -96,9 +110,9 @@ public class PanelThongKe extends javax.swing.JPanel {
 
         //create chartPanel to display chart(graph)
         ChartPanel lineChartPanel = new ChartPanel(linechart);
-//        panelLineChart.removeAll();
-//        panelLineChart.add(lineChartPanel, BorderLayout.CENTER);
-//        panelLineChart.validate();
+        pnThanhVien.removeAll();
+        pnThanhVien.add(lineChartPanel, BorderLayout.CENTER);
+        pnThanhVien.validate();
     }
 
     /*========================================================================================*/
@@ -127,14 +141,23 @@ public class PanelThongKe extends javax.swing.JPanel {
     /*========================================================================================*/
     public void showBarChart() {
 
-        List<Date> thoiDiemList = pane.getThoiDiemVaoKhuList();
-        System.out.println("List date:"+thoiDiemList);
+        List<Date> thoiDiemList = thongKeBUS.getAllDateVao();
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        List<Integer> listQuantity = thongKeBUS.getNumberOfMembersForDate();
 
-        // Thêm dữ liệu từ mảng data vào dataset
-        for (Date date : thoiDiemList) {
-            int count = getNumberOfMembersForDate(date); // Hàm này cần được cài đặt để lấy số lượng thành viên cho mỗi ngày
-            dataset.setValue(count, "Amount", date);
+        // Duyệt qua danh sách ngày và số lượng tương ứng
+        for (int i = 0; i < thoiDiemList.size(); i++) {
+            Date date = thoiDiemList.get(i);
+            int quantity = listQuantity.get(i);
+
+            // Kiểm tra nếu ngày trước đó trùng với ngày hiện tại
+            if (i > 0 && thoiDiemList.get(i - 1).equals(date)) {
+                // Nếu trùng, tăng giá trị quantity lên 1
+                quantity++;
+            }
+
+            // Thêm giá trị vào dataset
+            dataset.addValue(quantity, "Quantity", date);
         }
 
         // Tạo biểu đồ
@@ -157,15 +180,6 @@ public class PanelThongKe extends javax.swing.JPanel {
         pnThanhVien.removeAll();
         pnThanhVien.add(chartPanel, BorderLayout.CENTER);
         pnThanhVien.validate();
-    }
-
-    private int getNumberOfMembersForDate(Date date) {
-        int count = 0;
-        // xử lí ở đây nếu date = nhau thì count++
-//        if(date){
-//            count++;
-//        }
-        return 0; // Giả sử trả về số lượng thành viên cho mỗi ngày là 0
     }
 
     //load data tabel xuly

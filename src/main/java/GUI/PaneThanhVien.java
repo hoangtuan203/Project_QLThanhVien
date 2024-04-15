@@ -30,7 +30,6 @@ public class PaneThanhVien extends javax.swing.JPanel {
      */
     public PaneThanhVien() {
         initComponents();
-//        docThoiDiemTuTep();
     }
 
     /**
@@ -71,59 +70,13 @@ public class PaneThanhVien extends javax.swing.JPanel {
 
 
     private void btnCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckActionPerformed
-        Date ngayVaoKhu = new Date();
-        thoiDiemVaoKhuList.add(ngayVaoKhu);
-        // luuThoiDiemVaoTep();
+        
     }//GEN-LAST:event_btnCheckActionPerformed
 
-    public List<Date> getThoiDiemVaoKhuList() {
-        // Xóa các thời điểm hiện tại trong danh sách để tránh lặp lại khi gọi phương thức này nhiều lần
-        thoiDiemVaoKhuList.clear();
 
-        // Đọc thời điểm từ tệp tin và thêm vào danh sách
-        // docThoiDiemTuTep();
-
-        return thoiDiemVaoKhuList;
-    }
-    //hoang tuan
-    // private void luuThoiDiemVaoTep() {
-    //     try {
-    //         File file = new File("thoi_diem_vao_khu.txt");
-    //         if (!file.exists()) {
-    //             file.createNewFile();
-    //         }
-
-    //         BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-    //         for (Date thoiDiem : thoiDiemVaoKhuList) {
-    //             writer.write(thoiDiem.toString());
-    //             writer.newLine();
-    //         }
-    //         writer.close(); // Đóng luồng ghi file sau khi sử dụng
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // private void docThoiDiemTuTep() {
-    //     try (BufferedReader reader = new BufferedReader(new FileReader("thoi_diem_vao_khu.txt"))) {
-    //         String line;
-    //         SimpleDateFormat formatterInput = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); // Định dạng của đối tượng Date trong file
-    //         SimpleDateFormat formatterOutput = new SimpleDateFormat("dd-MM-yyyy"); // Định dạng bạn muốn lấy ra
-
-    //         while ((line = reader.readLine()) != null) {
-    //             try {
-    //                 Date thoiDiem = formatterInput.parse(line);
-    //                 String formattedDate = formatterOutput.format(thoiDiem); // Chuyển đổi thành chuỗi theo định dạng mới
-    //                 System.out.println("Thời điểm: " + formattedDate); // In ra để kiểm tra
-    //                 //thoiDiemVaoKhuList.add(thoiDiem);
-    //             } catch (ParseException e) {
-    //                 e.printStackTrace();
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
+    
+    //hoang tuan 
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCheck;
