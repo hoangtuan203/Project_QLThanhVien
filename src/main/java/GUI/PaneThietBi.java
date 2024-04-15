@@ -285,26 +285,30 @@ public class PaneThietBi extends javax.swing.JPanel {
     }//GEN-LAST:event_btnImportExcelActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        int selectedRow = jTableDevice.getSelectedRow();
+        int[] selectedRows = jTableDevice.getSelectedRows();
 
-        if (selectedRow >= 0) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa không?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+        if (selectedRows.length > 0) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa " + selectedRows.length + " thiết bị?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-                int MaTB = Integer.parseInt(jTableDevice.getValueAt(selectedRow, 1).toString());
-                String TenTB = jTableDevice.getValueAt(selectedRow, 2).toString();
-                String MoTa = jTableDevice.getValueAt(selectedRow, 3).toString();
+                for (int i = selectedRows.length - 1; i >= 0; i--) {
+                    int selectedRow = selectedRows[i];
+                    int MaTB = Integer.parseInt(jTableDevice.getValueAt(selectedRow, 1).toString());
+                    String TenTB = jTableDevice.getValueAt(selectedRow, 2).toString();
+                    String MoTa = jTableDevice.getValueAt(selectedRow, 3).toString();
 
-                thietbi tb = new thietbi(MaTB, TenTB, MoTa);
-                thietbiBUS.deleteDevice(tb);
-                JOptionPane.showMessageDialog(this, "Xóa thiết bị thành công");
+                    thietbi tb = new thietbi(MaTB, TenTB, MoTa);
+                    thietbiBUS.deleteDevice(tb);
+                }
+
+                JOptionPane.showMessageDialog(this, "Xóa " + selectedRows.length + " thiết bị thành công");
 
                 displaytablethietbi();
-
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn đối tượng xóa trên table");
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một đối tượng xóa trên bảng");
         }
+
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -354,20 +358,21 @@ public class PaneThietBi extends javax.swing.JPanel {
 
     private void jcbAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbAllActionPerformed
         boolean selectAll = jcbAll.isSelected();
-
         jcbAll.setSelected(selectAll);
 
         if (selectAll) {
-            for (int i = 0; i <= jTableDevice.getRowCount(); i++) {
-                jTableDevice.changeSelection(i, 0, true, false);
+            if (jTableDevice.getRowCount() > 0) {
+                for (int i = 0; i < jTableDevice.getRowCount(); i++) {
+                    jTableDevice.changeSelection(i, 0, true, false);
+                }
             }
         } else {
-            for (int i = 0; i <= jTableDevice.getRowCount(); i++) {
-                jTableDevice.changeSelection(i, 0, false, false);
+            if (jTableDevice.getRowCount() > 0) {
+                for (int i = 0; i < jTableDevice.getRowCount(); i++) {
+                    jTableDevice.changeSelection(i, 0, false, false);
+                }
             }
         }
-
-
     }//GEN-LAST:event_jcbAllActionPerformed
 
     private void displaySearchResult(List<thietbi> thietBi) {
