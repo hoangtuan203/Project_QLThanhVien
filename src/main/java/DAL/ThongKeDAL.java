@@ -39,8 +39,10 @@ public class ThongKeDAL {
             // Bắt đầu giao dịch
             session.beginTransaction();
 
-            // Sử dụng HQL để truy vấn cơ sở dữ liệu và lấy danh sách ngày và số lượng bản ghi tương ứng
-            Query<Object[]> query = session.createQuery("SELECT tv.tgVao, COUNT(*) FROM thongtinsd as tv GROUP BY tv.tgVao", Object[].class);
+            // Sử dụng HQL để truy vấn cơ sở dữ liệu và lấy danh sách ngày và số lượng bản
+            // ghi tương ứng
+            Query<Object[]> query = session
+                    .createQuery("SELECT tv.tgVao, COUNT(*) FROM thongtinsd as tv GROUP BY tv.tgVao", Object[].class);
 
             List<Object[]> resultList = query.getResultList();
 
@@ -58,25 +60,74 @@ public class ThongKeDAL {
         return counts;
     }
 
+    public List<Date> getFilteredDateVao(Date dateStart, Date dateEnd) {
+        List<Date> thoiDiemList = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            Query<Date> query = session.createQuery(
+                    "SELECT tv.tgVao FROM thongtinsd as tv WHERE tv.tgVao >= :start AND tv.tgVao <= :end GROUP BY tv.tgVao\r\n"
+                            + //
+                            "",
+                    Date.class);
+            query.setParameter("start", dateStart);
+            query.setParameter("end", dateEnd);
+            thoiDiemList = query.getResultList();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return thoiDiemList;
+    }
+
+    public List<Integer> getFilteredNumberOfMembersForDate(Date dateStart, Date dateEnd) {
+        List<Integer> counts = new ArrayList<>();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            Query<Object[]> query = session.createQuery(
+                    "SELECT tv.tgVao, COUNT(*) FROM thongtinsd as tv WHERE tv.tgVao BETWEEN :start AND :end GROUP BY tv.tgVao",
+                    Object[].class);
+            query.setParameter("start", dateStart);
+            query.setParameter("end", dateEnd);
+            List<Object[]> resultList = query.getResultList();
+
+            // Xử lý kết quả truy vấn để lấy số lượng mỗi ngày
+            for (Object[] result : resultList) {
+                Long dateCount = (Long) result[1];
+                counts.add(dateCount.intValue());
+            }
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return counts;
+    }
+
     public static void main(String[] args) {
         ThongKeDAL tk = new ThongKeDAL();
 
-        List<Integer> danhSachNgay = tk.getCountOfMembersForEachDate();
-
-        // In ra các ngày
-        System.out.println("count:");
-        for (Integer ngay : danhSachNgay) {
-            System.out.println(ngay);
+        // Chuyển các đối số từ kiểu String thành kiểu Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateStart;
+        Date dateEnd;
+        try {
+            dateStart = dateFormat.parse("2024-04-03");
+            dateEnd = dateFormat.parse("2024-04-16");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
         }
-//
-//        // Tạo một ngày để kiểm tra
-//        Date dateToCheck = new Date(); // Sử dụng ngày hiện tại, hoặc bạn có thể tạo ngày khác
-//
-//        // Gọi hàm để lấy số lượng thành viên vào trong ngày đã chọn
-//        int numberOfMembers = tk.getNumberOfMembersForDate(dateToCheck);
-//
-//        // In ra kết quả
-//        System.out.println("Số lượng thành viên vào trong ngày " + dateToCheck + " là: " + numberOfMembers);
+
+        // Gọi phương thức để lấy danh sách số lượng thành viên cho mỗi ngày trong
+        // khoảng thời gian đã chỉ định
+        List<Date> danhSachNgay = tk.getFilteredDateVao(dateStart, dateEnd);
+
+        // In ra số lượng thành viên cho mỗi ngày
+        System.out.println("list date:");
+        for (Date soLuong : danhSachNgay) {
+            System.out.println(soLuong);
+        }
+      
     }
 
 }
