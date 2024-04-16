@@ -157,5 +157,26 @@ public class thietbiDAL {
         }
         return deviceList;
     }
+    
+    public static List<thietbi> ListByDeviceDescription(String deviceDescription) {
+        List<thietbi> deviceList = new ArrayList<>();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tr = null;
+        try {
+            tr = session.beginTransaction();
+            Query query = session.createQuery("from thietbi where MoTaTB like :name");
+            query.setParameter("name", "%" + deviceDescription + "%");
+            deviceList = query.getResultList();
+            tr.commit();
+        } catch (HibernateException e) {
+            if (tr != null) {
+                tr.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return deviceList;
+    }
 
 }
