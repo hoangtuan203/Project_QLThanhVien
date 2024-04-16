@@ -137,7 +137,7 @@ public class HomeGUI extends javax.swing.JFrame {
 
         btnThietBi.setBackground(new java.awt.Color(204, 204, 204));
         btnThietBi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnThietBi.setText("THiẾT BỊ");
+        btnThietBi.setText("THIẾT BỊ");
         btnThietBi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnThietBiActionPerformed(evt);

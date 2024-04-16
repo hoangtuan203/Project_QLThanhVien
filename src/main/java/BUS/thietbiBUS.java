@@ -41,4 +41,8 @@ public class thietbiBUS {
     public static List<thietbi> getListByDeviceName(String deviceName){
         return thietbiDAL.ListByDeviceName(deviceName);
     }
+    
+    public static List<thietbi> getListByDeviceDescription(String deviceDescription){
+        return thietbiDAL.ListByDeviceDescription(deviceDescription);
+    }
 }
