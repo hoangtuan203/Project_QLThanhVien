@@ -282,6 +282,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x110;ang &#x111;&#x1b0;&#x1ee3;c m&#x1b0;&#x1ee3;n"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbBorrowedActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jtfName">
               <Properties>
@@ -350,6 +353,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x110;ang tr&#x1ed1;ng"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jcbEmptyActionPerformed"/>
+              </Events>
             </Component>
             <Component class="java.awt.Button" name="btnReload">
               <Properties>
