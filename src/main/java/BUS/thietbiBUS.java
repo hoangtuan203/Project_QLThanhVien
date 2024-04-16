@@ -25,24 +25,28 @@ public class thietbiBUS {
     public static int getIdDevice() {
         return thietbiDAL.getNextDeviceID();
     }
-    
-    public static void deleteDevice(thietbi tb){
+
+    public static void deleteDevice(thietbi tb) {
         thietbiDAL.delete(tb);
     }
-    
-    public static void updateDevice(thietbi tb){
+
+    public static void updateDevice(thietbi tb) {
         thietbiDAL.update(tb);
     }
-    
-    public static List<thietbi> getListByDeviceID(int deviceID){
+
+    public static List<thietbi> getListByDeviceID(int deviceID) {
         return thietbiDAL.ListByDeviceID(deviceID);
     }
-    
-    public static List<thietbi> getListByDeviceName(String deviceName){
+
+    public static List<thietbi> getListByDeviceName(String deviceName) {
         return thietbiDAL.ListByDeviceName(deviceName);
     }
-    
-    public static List<thietbi> getListByDeviceDescription(String deviceDescription){
+
+    public static List<thietbi> getListByDeviceDescription(String deviceDescription) {
         return thietbiDAL.ListByDeviceDescription(deviceDescription);
+    }
+    
+     public static List<thietbi> getDevicesByBorrowDateAndReturnDate() {
+        return thietbiDAL.getDevicesByBorrowDateAndReturnDate();
     }
 }

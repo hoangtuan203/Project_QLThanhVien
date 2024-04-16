@@ -106,7 +106,7 @@ public class thietbiDAL {
             if (maxId != null) {
                 nextDeviceID = maxId + 1;
             } else {
-                nextDeviceID = 1;
+                nextDeviceID = 10000001;
             }
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -157,7 +157,7 @@ public class thietbiDAL {
         }
         return deviceList;
     }
-    
+
     public static List<thietbi> ListByDeviceDescription(String deviceDescription) {
         List<thietbi> deviceList = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -166,6 +166,26 @@ public class thietbiDAL {
             tr = session.beginTransaction();
             Query query = session.createQuery("from thietbi where MoTaTB like :name");
             query.setParameter("name", "%" + deviceDescription + "%");
+            deviceList = query.getResultList();
+            tr.commit();
+        } catch (HibernateException e) {
+            if (tr != null) {
+                tr.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return deviceList;
+    }
+
+    public static List<thietbi> getDevicesByBorrowDateAndReturnDate() {
+        List<thietbi> deviceList = new ArrayList<>();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tr = null;
+        try {
+            tr = session.beginTransaction();
+            Query query = session.createQuery("SELECT DISTINCT tb FROM thietbi tb INNER JOIN thongtinsd ttsd ON tb.maTB = ttsd.maTB");
             deviceList = query.getResultList();
             tr.commit();
         } catch (HibernateException e) {
