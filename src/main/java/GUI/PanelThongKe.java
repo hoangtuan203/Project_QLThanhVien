@@ -82,18 +82,20 @@ public class PanelThongKe extends javax.swing.JPanel {
         // Duyệt qua danh sách ngày và số lượng tương ứng
         for (int i = 0; i < thoiDiemList.size(); i++) {
             Date date = thoiDiemList.get(i);
-            int quantity = listQuantity.get(i);
+            Integer quantity = listQuantity.get(i);
 
-            // Kiểm tra nếu ngày trước đó trùng với ngày hiện tại
-            if (i > 0 && thoiDiemList.get(i - 1).equals(date)) {
-                // Nếu trùng, tăng giá trị quantity lên 1
-                quantity++;
+            // Kiểm tra xem ngày và số lượng có null không
+            if (date != null && quantity != null) {
+                // Kiểm tra xem ngày hiện tại có trùng với ngày trước đó không
+                if (i > 0 && thoiDiemList.get(i - 1) != null && thoiDiemList.get(i - 1).equals(date)) {
+                    // Nếu trùng, tăng giá trị quantity lên 1
+                    quantity++;
+                }
+
+                // Thêm giá trị vào dataset
+                dataset.addValue(quantity, "Quantity", date);
             }
-
-            // Thêm giá trị vào dataset
-            dataset.addValue(quantity, "Quantity", date);
         }
-
         // create chart
         JFreeChart linechart = ChartFactory.createLineChart("Thống Kê Số Lượng Vào Khu Học Tập", "Thời Gian",
                 "Số Lượng",
@@ -130,16 +132,19 @@ public class PanelThongKe extends javax.swing.JPanel {
         // Duyệt qua danh sách ngày và số lượng tương ứng
         for (int i = 0; i < thoiDiemList.size(); i++) {
             Date date = thoiDiemList.get(i);
-            int quantity = listQuantity.get(i);
+            Integer quantity = listQuantity.get(i);
 
-            // Kiểm tra xem ngày hiện tại có trùng với ngày trước đó không
-            if (i > 0 && thoiDiemList.get(i - 1).equals(date)) {
-                // Nếu trùng, tăng giá trị quantity lên 1
-                quantity++;
+            // Kiểm tra xem ngày và số lượng có null không
+            if (date != null && quantity != null) {
+                // Kiểm tra xem ngày hiện tại có trùng với ngày trước đó không
+                if (i > 0 && thoiDiemList.get(i - 1) != null && thoiDiemList.get(i - 1).equals(date)) {
+                    // Nếu trùng, tăng giá trị quantity lên 1
+                    quantity++;
+                }
+
+                // Thêm giá trị vào dataset
+                dataset.addValue(quantity, "Quantity", date);
             }
-
-            // Thêm giá trị vào dataset
-            dataset.addValue(quantity, "Quantity", date);
         }
 
         // Tạo biểu đồ
@@ -219,12 +224,12 @@ public class PanelThongKe extends javax.swing.JPanel {
         int stt = 1;
         for (xuly i : display) {
             Object[] row = {
-                    stt++,
-                    i.getMaXL(),
-                    i.getMaTV(),
-                    i.getHinhThucXL(),
-                    i.getSoTien(),
-                    i.getTrangThaiXL()
+                stt++,
+                i.getMaXL(),
+                i.getMaTV(),
+                i.getHinhThucXL(),
+                i.getSoTien(),
+                i.getTrangThaiXL()
             };
             model.addRow(row);
         }
