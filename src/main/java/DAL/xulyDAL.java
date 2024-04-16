@@ -18,7 +18,7 @@ import org.hibernate.Transaction;
  */
 public class xulyDAL {
 
-    public static List<xuly> selectAll() {
+            public static List<xuly> selectAll() {
         List<xuly> list = new ArrayList();
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -86,7 +86,9 @@ public class xulyDAL {
         return list;
     }
 
-    public boolean delete(xuly t) {
+  
+
+    public static boolean delete(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
@@ -104,7 +106,7 @@ public class xulyDAL {
         return false;
     }
 
-    public boolean add(xuly t) {
+    public static boolean add(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
@@ -121,7 +123,40 @@ public class xulyDAL {
         return false;
     }
 
-    public boolean update(xuly t) {
+
+
+public static List<xuly> search(String keyword) {
+    List<xuly> searchResult = new ArrayList<>();
+
+    try {
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        if (sessionFactory != null) {
+            Session session = sessionFactory.openSession();
+            Transaction tr = session.beginTransaction();
+
+            // Sử dụng câu truy vấn HQL (Hibernate Query Language) để tìm kiếm các bản ghi
+            Query query = session.createQuery("FROM xuly WHERE MaXL LIKE :keyword OR MaTV LIKE :keyword OR HinhThucXL LIKE :keyword OR SoTien LIKE :keyword OR NgayXL LIKE :keyword OR TrangThaiXL LIKE :keyword");
+            query.setParameter("keyword", "%" + keyword + "%");
+            List result = query.getResultList();
+
+            for (Object obj : result) {
+                if (obj instanceof xuly) {
+                    xuly x = (xuly) obj;
+                    searchResult.add(x);
+                }
+            }
+
+            tr.commit();
+            session.close();
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return searchResult;
+}
+
+    public static boolean update(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
