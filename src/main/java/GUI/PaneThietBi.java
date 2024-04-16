@@ -6,7 +6,6 @@ package GUI;
 
 import BUS.thietbiBUS;
 import DAL.thietbi;
-import DAL.thietbiDAL;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +21,7 @@ public class PaneThietBi extends javax.swing.JPanel {
      */
     public PaneThietBi() {
         initComponents();
-        displaytablethietbi();
+        displayTableDevice();
     }
 
     /**
@@ -90,6 +89,11 @@ public class PaneThietBi extends javax.swing.JPanel {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
 
         jcbBorrowed.setText("Đang được mượn");
+        jcbBorrowed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbBorrowedActionPerformed(evt);
+            }
+        });
 
         jtfName.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jtfName.setDoubleBuffered(true);
@@ -134,6 +138,11 @@ public class PaneThietBi extends javax.swing.JPanel {
         });
 
         jcbEmpty.setText("Đang trống");
+        jcbEmpty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbEmptyActionPerformed(evt);
+            }
+        });
 
         btnReload.setActionCommand("Tải lại");
         btnReload.setLabel("Tải lại");
@@ -288,7 +297,9 @@ public class PaneThietBi extends javax.swing.JPanel {
             if (!allDevice.contains(tb)) {
                 thietbiBUS.addDevice(tb);
                 JOptionPane.showMessageDialog(this, "Thêm thiết bị thành công");
-                displaytablethietbi();
+                jtfName.setText(null);
+                jtfDescription.setText(null);
+                displayTableDevice();
             } else {
                 JOptionPane.showMessageDialog(this, "Thiết bị đã tồn tại trong danh sách");
             }
@@ -303,23 +314,40 @@ public class PaneThietBi extends javax.swing.JPanel {
             int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa " + selectedRows.length + " thiết bị?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
+                boolean hasBorrowedDevices = false;
+
+                List<thietbi> borrowedDevices = thietbiBUS.getDevicesByBorrowDateAndReturnDate();
+
                 for (int i = selectedRows.length - 1; i >= 0; i--) {
                     int selectedRow = selectedRows[i];
                     int MaTB = Integer.parseInt(jTableDevice.getValueAt(selectedRow, 1).toString());
                     String TenTB = jTableDevice.getValueAt(selectedRow, 2).toString();
                     String MoTa = jTableDevice.getValueAt(selectedRow, 3).toString();
 
-                    thietbi tb = new thietbi(MaTB, TenTB, MoTa);
-                    thietbiBUS.deleteDevice(tb);
+                    for (thietbi borrowedDevice : borrowedDevices) {
+                        if (borrowedDevice.getMaTB() == MaTB) {
+                            hasBorrowedDevices = true;
+                            break;
+                        }
+                    }
+
+                    if (hasBorrowedDevices) {
+                        JOptionPane.showMessageDialog(this, "Không thể xóa thiết bị đang được mượn");
+                    } else {
+                        thietbi tb = new thietbi(MaTB, TenTB, MoTa);
+                        thietbiBUS.deleteDevice(tb);
+                    }
                 }
 
-                JOptionPane.showMessageDialog(this, "Xóa " + selectedRows.length + " thiết bị thành công");
-
-                displaytablethietbi();
+                if (!hasBorrowedDevices) {
+                    JOptionPane.showMessageDialog(this, "Xóa " + selectedRows.length + " thiết bị thành công");
+                    displayTableDevice();
+                }
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một đối tượng xóa trên bảng");
         }
+
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
@@ -337,7 +365,10 @@ public class PaneThietBi extends javax.swing.JPanel {
                 thietbiBUS.updateDevice(tb);
 
                 JOptionPane.showMessageDialog(this, "Sửa thiết bị thành công");
-                displaytablethietbi();
+
+                jtfName.setText(null);
+                jtfDescription.setText(null);
+                displayTableDevice();
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn thiết bị cần cập nhật");
@@ -349,19 +380,19 @@ public class PaneThietBi extends javax.swing.JPanel {
         String keyword = jtfSearch.getText().trim();
 
         if (keyword.isEmpty()) {
-            displaytablethietbi();
+            displayTableDevice();
         } else {
-            List<thietbi> danhsachthietbi;
+            List<thietbi> dsthietbi;
 
             try {
                 int keywordInt = Integer.parseInt(keyword);
-                danhsachthietbi = thietbiBUS.getListByDeviceID(keywordInt);
+                dsthietbi = thietbiBUS.getListByDeviceID(keywordInt);
             } catch (NumberFormatException e) {
-                danhsachthietbi = thietbiBUS.getListByDeviceName(keyword);
-                danhsachthietbi = thietbiBUS.getListByDeviceDescription(keyword);
+                dsthietbi = thietbiBUS.getListByDeviceName(keyword);
+                dsthietbi = thietbiBUS.getListByDeviceDescription(keyword);
             }
 
-            displaySearchResult(danhsachthietbi);
+            displaySearchResult(dsthietbi);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
@@ -390,28 +421,110 @@ public class PaneThietBi extends javax.swing.JPanel {
     }//GEN-LAST:event_jTableDeviceMouseClicked
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-        displaytablethietbi();
+        displayTableDevice();
         jtfName.setText(null);
         jtfDescription.setText(null);
         jtfSearch.setText(null);
         jcbAll.setSelected(false);
+        jcbBorrowed.setSelected(false);
+        jcbEmpty.setSelected(false);
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExcelActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnImportExcelActionPerformed
 
-    public void displaytablethietbi() {
+    private void jcbBorrowedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbBorrowedActionPerformed
+        List<thietbi> allDevices = thietbiBUS.getAllDevice();
+        List<thietbi> borrowedDevices = thietbiBUS.getDevicesByBorrowDateAndReturnDate();
+
+        DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+
+        boolean showBorrowedOnly = jcbBorrowed.isSelected();
+
+        for (thietbi device : allDevices) {
+            boolean isBorrowed = false;
+
+            for (thietbi borrowedDevice : borrowedDevices) {
+                if (device.getMaTB() == borrowedDevice.getMaTB()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+            if (!showBorrowedOnly || (showBorrowedOnly && isBorrowed)) {
+                String status = isBorrowed ? "Đang được mượn" : "Đang trống";
+
+                Object[] row = {
+                    stt++,
+                    device.getMaTB(),
+                    device.getTenTB(),
+                    device.getMoTaTB(),
+                    status
+                };
+                model.addRow(row);
+            }
+        }
+    }//GEN-LAST:event_jcbBorrowedActionPerformed
+
+    private void jcbEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbEmptyActionPerformed
+        List<thietbi> allDevices = thietbiBUS.getAllDevice();
+        List<thietbi> borrowedDevices = thietbiBUS.getDevicesByBorrowDateAndReturnDate();
+
+        DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+
+        boolean showAvailableOnly = jcbEmpty.isSelected();
+
+        for (thietbi device : allDevices) {
+            boolean isAvailable = true;
+
+            for (thietbi borrowedDevice : borrowedDevices) {
+                if (device.getMaTB() == borrowedDevice.getMaTB()) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (!showAvailableOnly || (showAvailableOnly && isAvailable)) {
+                String status = isAvailable ? "Đang trống" : "Đang được mượn";
+
+                Object[] row = {
+                    stt++,
+                    device.getMaTB(),
+                    device.getTenTB(),
+                    device.getMoTaTB(),
+                    status
+                };
+                model.addRow(row);
+            }
+        }
+    }//GEN-LAST:event_jcbEmptyActionPerformed
+
+    public void displayTableDevice() {
         List<thietbi> display = thietbiBUS.getAllDevice();
         DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
         model.setRowCount(0);
         int stt = 1;
         for (thietbi i : display) {
+            boolean isBorrowed = false;
+            for (thietbi device : thietbiBUS.getDevicesByBorrowDateAndReturnDate()) {
+                if (device.getMaTB() == i.getMaTB()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+            String status = isBorrowed ? "Đang được mượn" : "Đang trống";
+
             Object[] row = {
                 stt++,
                 i.getMaTB(),
                 i.getTenTB(),
-                i.getMoTaTB(),};
+                i.getMoTaTB(),
+                status
+            };
             model.addRow(row);
         }
     }
@@ -419,16 +532,27 @@ public class PaneThietBi extends javax.swing.JPanel {
     private void displaySearchResult(List<thietbi> thietBi) {
         DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
         model.setRowCount(0);
-        int stt = 1;
         for (thietbi tb : thietBi) {
+            boolean isBorrowed = false;
+            for (thietbi device : thietbiBUS.getDevicesByBorrowDateAndReturnDate()) {
+                if (device.getMaTB() == tb.getMaTB()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+            String status = isBorrowed ? "Đang được mượn" : "Đang trống";
+
             Object[] row = {
-                stt++,
+                model.getRowCount() + 1,
                 tb.getMaTB(),
                 tb.getTenTB(),
-                tb.getMoTaTB(),};
+                tb.getMoTaTB(),
+                status
+            };
             model.addRow(row);
         }
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button btnAdd;
