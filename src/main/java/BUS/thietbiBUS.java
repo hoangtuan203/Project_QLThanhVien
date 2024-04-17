@@ -7,6 +7,7 @@ package BUS;
 import DAL.thietbi;
 import java.util.List;
 import DAL.thietbiDAL;
+import java.io.File;
 
 /**
  *
@@ -45,8 +46,12 @@ public class thietbiBUS {
     public static List<thietbi> getListByDeviceDescription(String deviceDescription) {
         return thietbiDAL.ListByDeviceDescription(deviceDescription);
     }
-    
-     public static List<thietbi> getDevicesByBorrowDateAndReturnDate() {
+
+    public static List<thietbi> getDevicesByBorrowDateAndReturnDate() {
         return thietbiDAL.getDevicesByBorrowDateAndReturnDate();
+    }
+
+    public static void importExcelToDatabase(File excelFile) {
+        thietbiDAL.importExcelToDatabase(excelFile);
     }
 }

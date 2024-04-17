@@ -4,6 +4,7 @@
  */
 package DAL;
 
+import BUS.thietbiBUS;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,18 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 /**
  *
@@ -199,4 +212,32 @@ public class thietbiDAL {
         return deviceList;
     }
 
+    public static void importExcelToDatabase(File excelFile) {
+        try (FileInputStream excelFIS = new FileInputStream(excelFile); 
+             BufferedInputStream excelBIS = new BufferedInputStream(excelFIS); 
+             XSSFWorkbook excelImportToJTable = new XSSFWorkbook(excelBIS)) {
+
+            XSSFSheet excelSheet = excelImportToJTable.getSheetAt(0);
+
+            for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
+                XSSFRow excelRow = excelSheet.getRow(row);
+                Object[] rowData = new Object[5];
+
+                for (int column = 0; column < 3; column++) {
+                    XSSFCell excelCell = excelRow.getCell(column);
+                    if (column == 0 && excelCell != null && excelCell.getCellType() == CellType.NUMERIC) {
+                        rowData[column + 1] = (int) excelCell.getNumericCellValue();
+                    } else if (excelCell != null) {
+                        rowData[column + 1] = excelCell.getStringCellValue();
+                    }
+                }
+                
+                thietbi tb = new thietbi((int) rowData[1], (String) rowData[2], (String) rowData[3]);
+                
+                add(tb);
+            }
+        } catch (IOException exception) {
+            JOptionPane.showMessageDialog(null, exception.getMessage());
+        }
+    }
 }

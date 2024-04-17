@@ -21,11 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.commons.compress.archivers.dump.InvalidFormatException;
 import static org.apache.commons.math3.fitting.leastsquares.LeastSquaresFactory.model;
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import static org.hibernate.criterion.Restrictions.lt;
 import static org.hibernate.criterion.Subqueries.lt;
 
@@ -279,8 +274,8 @@ public class PaneThietBi extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -450,69 +445,17 @@ public class PaneThietBi extends javax.swing.JPanel {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExcelActionPerformed
-        File excelFile;
-        FileInputStream excelFIS = null;
-        BufferedInputStream excelBIS = null;
-        XSSFWorkbook excelImportToJTable = null;
-        String defaultCurrentDirectoryPath = "C:\\Users\\anhvc\\Desktop";
-        JFileChooser excelFileChooser = new JFileChooser(defaultCurrentDirectoryPath);
-        excelFileChooser.setDialogTitle("Select Excel File");
+        JFileChooser excelFileChooser = new JFileChooser();
+        excelFileChooser.setDialogTitle("Chọn tệp Excel");
         FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
         excelFileChooser.setFileFilter(fnef);
         int excelChooser = excelFileChooser.showOpenDialog(null);
+
         if (excelChooser == JFileChooser.APPROVE_OPTION) {
-            try {
-                excelFile = excelFileChooser.getSelectedFile();
-                excelFIS = new FileInputStream(excelFile);
-                excelBIS = new BufferedInputStream(excelFIS);
-                excelImportToJTable = new XSSFWorkbook(excelBIS);
-                XSSFSheet excelSheet = excelImportToJTable.getSheetAt(0);
-                DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
-                model.setRowCount(0);
-
-                for (int row = 1; row <= excelSheet.getLastRowNum(); row++) {
-                    XSSFRow excelRow = excelSheet.getRow(row);
-                    Object[] rowData = new Object[5];
-
-                    for (int column = 0; column < 3; column++) {
-                        XSSFCell excelCell = excelRow.getCell(column);
-                        if (column == 0) {
-                            if (excelCell != null && excelCell.getCellType() == CellType.NUMERIC) {
-                                rowData[column + 1] = (int) excelCell.getNumericCellValue();
-                            }
-                        } else {
-                            if (excelCell != null) {
-                                rowData[column + 1] = excelCell.getStringCellValue();
-                            }
-                        }
-                    }
-                    rowData[0] = row + 1;
-                    rowData[4] = "Đang trống";
-
-                    thietbi tb = new thietbi((int) rowData[1], (String) rowData[2], (String) rowData[3]);
-
-                    thietbiBUS.addDevice(tb);
-                }
-
-                JOptionPane.showMessageDialog(null, "Imported Successfully !!.....");
-                displayTableDevice();
-            } catch (IOException exception) {
-                JOptionPane.showMessageDialog(null, exception.getMessage());
-            } finally {
-                try {
-                    if (excelFIS != null) {
-                        excelFIS.close();
-                    }
-                    if (excelBIS != null) {
-                        excelBIS.close();
-                    }
-                    if (excelImportToJTable != null) {
-                        excelImportToJTable.close();
-                    }
-                } catch (IOException exception) {
-                    JOptionPane.showMessageDialog(null, exception.getMessage());
-                }
-            }
+            File excelFile = excelFileChooser.getSelectedFile();
+            thietbiBUS.importExcelToDatabase(excelFile);
+            JOptionPane.showMessageDialog(null, "Nhập danh sách thiết bị thành công");
+            displayTableDevice();
         }
     }//GEN-LAST:event_btnImportExcelActionPerformed
 
