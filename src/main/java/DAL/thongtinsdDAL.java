@@ -17,15 +17,15 @@ import org.hibernate.Transaction;
  *
  * @author PHY
  */
-public class thietbiDAL {
+public class thongtinsdDAL {
 
-    public static List<thietbi> selectAll() {
-        List<thietbi> list = new ArrayList();
+    public static List<thongtinsd> selectAll() {
+        List<thongtinsd> list = new ArrayList();
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-            Query query = session.createQuery("from thietbi");
+            Query query = session.createQuery("from thongtinsd");
             list = query.getResultList();
 
             tr.commit();
@@ -40,7 +40,7 @@ public class thietbiDAL {
         return list;
     }
 
-    public static void add(thietbi t) {
+    public static void add(thongtinsd t) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
@@ -59,7 +59,7 @@ public class thietbiDAL {
         }
     }
 
-    public static void update(thietbi t) {
+    public static void update(thongtinsd t) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
@@ -78,7 +78,7 @@ public class thietbiDAL {
         }
     }
 
-    public static void delete(thietbi t) {
+    public static void delete(thongtinsd t) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
@@ -101,12 +101,12 @@ public class thietbiDAL {
         int nextDeviceID = 0;
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            Query query = session.createSQLQuery("SELECT MAX(MaTB) FROM thietbi");
+            Query query = session.createSQLQuery("SELECT MAX(MaTB) FROM thongtinsd");
             Integer maxId = (Integer) query.getSingleResult();
             if (maxId != null) {
                 nextDeviceID = maxId + 1;
             } else {
-                nextDeviceID = 10000001;
+                nextDeviceID = 1;
             }
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -116,13 +116,13 @@ public class thietbiDAL {
         return nextDeviceID;
     }
 
-    public static List<thietbi> ListByDeviceID(int deviceId) {
-        List<thietbi> deviceList = new ArrayList<>();
+    public static List<thongtinsd> ListByDeviceID(int deviceId) {
+        List<thongtinsd> deviceList = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-            Query query = session.createQuery("from thietbi where MaTB like :id");
+            Query query = session.createQuery("from thongtinsd where MaTB like :id");
             query.setParameter("id", "%" + deviceId + "%");
             deviceList = query.getResultList();
             tr.commit();
@@ -137,13 +137,13 @@ public class thietbiDAL {
         return deviceList;
     }
 
-    public static List<thietbi> ListByDeviceName(String deviceName) {
-        List<thietbi> deviceList = new ArrayList<>();
+    public static List<thongtinsd> ListByDeviceName(String deviceName) {
+        List<thongtinsd> deviceList = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-            Query query = session.createQuery("from thietbi where TenTB like :name");
+            Query query = session.createQuery("from thongtinsd where TenTB like :name");
             query.setParameter("name", "%" + deviceName + "%");
             deviceList = query.getResultList();
             tr.commit();
@@ -157,35 +157,15 @@ public class thietbiDAL {
         }
         return deviceList;
     }
-
-    public static List<thietbi> ListByDeviceDescription(String deviceDescription) {
-        List<thietbi> deviceList = new ArrayList<>();
+    
+    public static List<thongtinsd> ListByDeviceDescription(String deviceDescription) {
+        List<thongtinsd> deviceList = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-            Query query = session.createQuery("from thietbi where MoTaTB like :name");
+            Query query = session.createQuery("from thongtinsd where MoTaTB like :name");
             query.setParameter("name", "%" + deviceDescription + "%");
-            deviceList = query.getResultList();
-            tr.commit();
-        } catch (HibernateException e) {
-            if (tr != null) {
-                tr.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return deviceList;
-    }
-
-    public static List<thietbi> getDevicesByBorrowDateAndReturnDate() {
-        List<thietbi> deviceList = new ArrayList<>();
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tr = null;
-        try {
-            tr = session.beginTransaction();
-            Query query = session.createQuery("SELECT DISTINCT tb FROM thietbi tb INNER JOIN thongtinsd ttsd ON tb.maTB = ttsd.maTB");
             deviceList = query.getResultList();
             tr.commit();
         } catch (HibernateException e) {
