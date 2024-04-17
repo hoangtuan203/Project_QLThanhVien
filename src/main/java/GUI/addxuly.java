@@ -1,8 +1,3 @@
-
-
-
-
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
@@ -38,6 +33,7 @@ public class addxuly extends javax.swing.JDialog {
         filltvvipham();
         numberonly();
         addcbxgetItem();
+        txtsotienadd.setEditable(false);
     }
 
     /**
@@ -200,9 +196,9 @@ public class addxuly extends javax.swing.JDialog {
         });
 
     }
-     private void addcbxgetItem()
-    {
-          cbxhinhthucadd.addActionListener(new ActionListener() {
+
+    private void addcbxgetItem() {
+        cbxhinhthucadd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String selectedOption = (String) cbxhinhthucadd.getSelectedItem();
                 if (selectedOption.equals("Bồi thường")) {
@@ -212,7 +208,7 @@ public class addxuly extends javax.swing.JDialog {
                 }
             }
         });
-        
+
     }
 
     private void txtsotienaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsotienaddActionPerformed
@@ -232,12 +228,16 @@ public class addxuly extends javax.swing.JDialog {
         Date today = new Date(System.currentTimeMillis());
         Integer sotien = null;
         if (!hinhthuc.equals("Bồi thường")) {
-        txtsotienadd.setEditable(false);
+            txtsotienadd.setEditable(false);
             xuly xulyadd = new xuly(0, selectedOption, hinhthuc, sotien, today, 1);
         } else {
-            
-            xuly xulyadd = new xuly(0, selectedOption, hinhthuc, sotien, today, 1);
-            sotien = Integer.valueOf(txtsotienadd.getText());
+            if (!(txtsotienadd.getText()).isEmpty()) {
+                sotien = Integer.valueOf(txtsotienadd.getText());
+                xuly xulyadd = new xuly(0, selectedOption, hinhthuc, sotien, today, 1);
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền cần bồi thường");
+                return;
+            }
 
         }
         xuly xulyadd = new xuly(0, selectedOption, hinhthuc, null, today, 1);
@@ -254,9 +254,20 @@ public class addxuly extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxnmatvActionPerformed
     private void filltvvipham() {
+
         List<thongtinsd> dstv = xulyBUS.selectalltv();
+        List<xuly> dsxl = xulyBUS.selectAll();
+        int flag = 0;
         for (thongtinsd matv : dstv) {
-            cbxnmatv.addItem(matv.getMaTV() + "");
+            for (xuly i : dsxl) {
+                if (matv.getMaTV() == i.getMaTV() && i.getTrangThaiXL() == 1) {
+                    flag++;
+                }
+            }
+            if (flag ==0) {
+                cbxnmatv.addItem(matv.getMaTV()+"");
+            }
+
         }
 
     }

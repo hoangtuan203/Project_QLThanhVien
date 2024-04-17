@@ -308,8 +308,11 @@ public class PanelXuLy extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Định dạng ngày không hợp lệ!");
                 return; // Nếu định dạng không hợp lệ, dừng lại và không tiếp tục thực hiện
             }
-
-            Integer sotien = Integer.parseInt(txtsotien.getText());
+            Integer sotien =null;// Integer.parseInt(txtsotien.getText());
+            if(hinhthuc.equals("Bồi thường"))
+            {
+                sotien=Integer.parseInt(txtsotien.getText());
+            }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             LocalDate localDate = LocalDate.parse(ngay, formatter);
@@ -319,7 +322,7 @@ public class PanelXuLy extends javax.swing.JPanel {
             if (xulyupdate.update(new xuly(maxl, matv, hinhthuc, sotien, date, trangthai))) {
                 JOptionPane.showMessageDialog(this, "Sửa xử lý thành công");
             } else {
-                JOptionPane.showMessageDialog(this, "Sửa xử lý thất bại");
+                 JOptionPane.showMessageDialog(this, "Sửa xử lý fail");
             }
             displaytablexuly();
         } else {
@@ -392,7 +395,8 @@ public class PanelXuLy extends javax.swing.JPanel {
                 if (selectedOption.equals("Bồi thường")) {
                     txtsotien.setEditable(true); // Cho phép chỉnh sửa TextField khi chọn Option 3
                 } else {
-                    txtsotien.setEditable(false); // Ngăn chặn chỉnh sửa TextField khi chọn các Option khác
+                    txtsotien.setEditable(false);
+                   txtsotien.setText("");// Ngăn chặn chỉnh sửa TextField khi chọn các Option khác
                 }
             }
         });
