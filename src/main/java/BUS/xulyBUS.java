@@ -25,21 +25,21 @@ public class xulyBUS {
       public static List<thongtinsd> selectalltv() {
           return xulyDAL.selectalltv();
       }
-       public static boolean delete(xuly t)
+       public static boolean deleteXL(xuly t)
        {
-           return xulyDAL.delete(t);
+           return xulyDAL.deleteXL(t);
        }
-       public static boolean add(xuly t)
+       public static boolean addXL(xuly t)
        {
-           return xulyDAL.add(t);
+           return xulyDAL.addXL(t);
        }
-      public static boolean update(xuly t)
+      public static boolean updateXL(xuly t)
        {
-           return xulyDAL.update(t);
+           return xulyDAL.updateXL(t);
        }
       public static List<xuly> search(String keyword)
      {
-         return  xulyDAL.search(keyword);
+         return  xulyDAL.searchXL(keyword);
      }
           
           

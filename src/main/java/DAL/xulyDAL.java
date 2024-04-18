@@ -88,7 +88,7 @@ public class xulyDAL {
 
   
 
-    public static boolean delete(xuly t) {
+    public static boolean deleteXL(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
@@ -106,7 +106,7 @@ public class xulyDAL {
         return false;
     }
 
-    public static boolean add(xuly t) {
+    public static boolean addXL(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
@@ -125,7 +125,7 @@ public class xulyDAL {
 
 
 
-public static List<xuly> search(String keyword) {
+public static List<xuly> searchXL(String keyword) {
     List<xuly> searchResult = new ArrayList<>();
 
     try {
@@ -156,7 +156,7 @@ public static List<xuly> search(String keyword) {
     return searchResult;
 }
 
-    public static boolean update(xuly t) {
+    public static boolean updateXL(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
             if (sessionFactory != null) {
