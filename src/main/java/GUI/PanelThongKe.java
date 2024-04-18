@@ -27,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -52,46 +54,47 @@ public class PanelThongKe extends javax.swing.JPanel {
     private SpinnerDateModel spinnerDateModelbd;
     private JSpinner dateSpinnerkt;
     private SpinnerDateModel spinnerDateModelkt;
-    
+
     /**
      * Creates new form PanelThongKe
      */
     public PanelThongKe() {
         initComponents();
+        loadTotalAmount();
         spinnerDateModelbd = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
         dateSpinnerbd = new JSpinner(spinnerDateModelbd);
         JSpinner.DateEditor dateEditorbd = new JSpinner.DateEditor(dateSpinnerbd, "dd/MM/yyyy HH:mm:ss");
         dateSpinnerbd.setEditor(dateEditorbd);
-        
+
         spinnerDateModelkt = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
         dateSpinnerkt = new JSpinner(spinnerDateModelkt);
         JSpinner.DateEditor dateEditorkt = new JSpinner.DateEditor(dateSpinnerkt, "dd/MM/yyyy HH:mm:ss");
         dateSpinnerkt.setEditor(dateEditorkt);
-        
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
-                .addComponent(dateSpinnerbd)
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 110, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerbd)
         );
         jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-                .addComponent(dateSpinnerbd)
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 22, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerbd)
         );
-        
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 128, Short.MAX_VALUE)
-                .addComponent(dateSpinnerkt)
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 128, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerkt)
         );
         jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
-                .addComponent(dateSpinnerkt)
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 22, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerkt)
         );
 
         showPieChart();
@@ -102,28 +105,68 @@ public class PanelThongKe extends javax.swing.JPanel {
     }
 
     public void showPieChart() {
+        // Lấy danh sách trạng thái từ cơ sở dữ liệu
+        List<Integer> statuses = thongKeBUS.getAllTrangThaiXL(); // Gọi phương thức đã được định nghĩa trước đó
 
-        DefaultPieDataset barDataset = new DefaultPieDataset();
-        barDataset.setValue("IPhone 5s", Double.valueOf(20));
-        barDataset.setValue("SamSung Grand", Double.valueOf(20));
-        barDataset.setValue("MotoG", Double.valueOf(40));
-        barDataset.setValue("Nokia Lumia", Double.valueOf(10));
+        // Tạo dataset cho Pie Chart
+        DefaultPieDataset pieDataset = new DefaultPieDataset();
 
-        JFreeChart piechart = ChartFactory.createPieChart("mobile sales", barDataset, false, true, false);// explain
+        // Tính tổng số lượng trạng thái
+        int totalCount = statuses.size(); // Số lượng trạng thái là độ dài của danh sách
 
-        PiePlot piePlot = (PiePlot) piechart.getPlot();
+        // Thêm dữ liệu vào dataset và đặt nhãn cho từng phần tử
+        for (Integer status : statuses) {
+            int count = thongKeBUS.getCountForStatus(status); // Lấy số lượng dựa trên trạng thái, bạn cần tự triển khai
 
-        piePlot.setSectionPaint("IPhone 5s", new Color(255, 255, 102));
-        piePlot.setSectionPaint("SamSung Grand", new Color(102, 255, 102));
-        piePlot.setSectionPaint("MotoG", new Color(255, 102, 153));
-        piePlot.setSectionPaint("Nokia Lumia", new Color(0, 204, 204));
+            // Đặt nhãn cho từng phần tử
+            String label;
+            switch (status) {
+                case 0:
+                    label = "Đang Xử Lý";
+                    break;
+                case 1:
+                    label = "Đã Xử Lý";
+                    break;
+                default:
+                    label = "Khác"; // Có thể thay đổi tùy theo nhu cầu của bạn
+                    break;
+            }
 
-        piePlot.setBackgroundPaint(Color.white);
+            // Tính phần trăm
+            double percentage = ((double) count / (double) totalCount) * 100.0;
 
-        ChartPanel barChartPanel = new ChartPanel(piechart);
+            // Thêm dữ liệu vào dataset
+            pieDataset.setValue(label, percentage);
+        }
+
+        // Tạo Pie Chart
+        JFreeChart pieChart = ChartFactory.createPieChart("Status Distribution", pieDataset, true, true, false);
+
+        // Cài đặt hiển thị phần trăm trên các phần tử của biểu đồ
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} ({2})");
+        plot.setLegendLabelGenerator(labelGenerator);
+
+        // Tạo Panel để hiển thị biểu đồ
+        ChartPanel chartPanel = new ChartPanel(pieChart);
+
+        // Thêm Panel vào frame hoặc container của bạn
         pnXuLy.removeAll();
-        pnXuLy.add(barChartPanel, BorderLayout.CENTER);
+        pnXuLy.add(chartPanel, BorderLayout.CENTER);
         pnXuLy.validate();
+    }
+
+    // tinh tong tien phat 
+    public void loadTotalAmount() {
+        // Gọi phương thức để lấy tổng số tiền
+        int totalAmount = thongKeBUS.getTotalAmount();
+
+        // Gán giá trị tổng số tiền vào TextField
+        if (totalAmount == 0) {
+            txtTongTienPhat.setText("0");
+        } else {
+            txtTongTienPhat.setText(String.valueOf(totalAmount));
+        }
     }
 
     public void showLineChart() {
@@ -287,7 +330,7 @@ public class PanelThongKe extends javax.swing.JPanel {
             model.addRow(row);
         }
     }
-    
+
     public void showDevice() {
         List<thietbi> listtb = tbbus.getAllDevice();
         DefaultTableModel model = (DefaultTableModel) ThietBiTable.getModel();
@@ -298,12 +341,11 @@ public class PanelThongKe extends javax.swing.JPanel {
                 stt++,
                 i.getMaTB(),
                 i.getTenTB(),
-                i.getMoTaTB(),
-            };
+                i.getMoTaTB(),};
             model.addRow(row);
         }
     }
-    
+
     public void searchDevice(String tgbd, String tgkt, String tentb, int trangthai) {
         DefaultTableModel model = (DefaultTableModel) ThietBiTable.getModel();
         model.setColumnCount(0);
@@ -314,16 +356,16 @@ public class PanelThongKe extends javax.swing.JPanel {
         model.addColumn("Ngày Vào");
         model.addColumn("Ngày Mượn");
         model.addColumn("Ngày Trả");
-        
+
         List<thietbi> listtb = tbbus.getAllDevice();
         List<thongtinsd> listttsd = ttsdbus.getAllDevice();
-        
+
         model.setRowCount(0);
-        if(tgbd.equalsIgnoreCase("") && tgkt.equalsIgnoreCase("")) {
+        if (tgbd.equalsIgnoreCase("") && tgkt.equalsIgnoreCase("")) {
             int stt = 1;
             for (thietbi i : listtb) {
                 for (thongtinsd j : listttsd) {
-                    if(i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
+                    if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
                         Object[] row = {
                             stt++,
                             i.getMaTB(),
@@ -339,9 +381,8 @@ public class PanelThongKe extends javax.swing.JPanel {
             }
         }
     }
-    
-//    public void 
 
+//    public void 
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -385,7 +426,7 @@ public class PanelThongKe extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableXuLy = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtTongTienPhat = new javax.swing.JTextField();
 
         pnThanhVien1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         pnThanhVien1.setLayout(new java.awt.BorderLayout());
@@ -681,7 +722,7 @@ public class PanelThongKe extends javax.swing.JPanel {
                         .addComponent(jLabel5)
                         .addGap(77, 77, 77))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTongTienPhat, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
@@ -694,11 +735,11 @@ public class PanelThongKe extends javax.swing.JPanel {
                         .addGap(60, 60, 60)
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtTongTienPhat, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(305, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Xử Lý", jPanel3);
@@ -720,7 +761,7 @@ public class PanelThongKe extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox5ActionPerformed
 
     private void btnFind1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFind1ActionPerformed
-        searchDevice("","", (String) tentbcbb.getSelectedItem(),1);
+        searchDevice("", "", (String) tentbcbb.getSelectedItem(), 1);
 //        System.out.println(dateSpinnerbd.getValue());
 //        System.out.println(dateSpinnerkt.getValue());
 
@@ -737,7 +778,7 @@ public class PanelThongKe extends javax.swing.JPanel {
             showLineChart(dateStart, dateEnd);
         }
     }// GEN-LAST:event_btnFindActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ThietBiTable;
     private javax.swing.JButton btnFind1;
@@ -767,11 +808,11 @@ public class PanelThongKe extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel pnThanhVien;
     private javax.swing.JPanel pnThanhVien1;
     private javax.swing.JPanel pnXuLy;
     private javax.swing.JTable tableXuLy;
     private javax.swing.JComboBox<String> tentbcbb;
+    private javax.swing.JTextField txtTongTienPhat;
     // End of variables declaration//GEN-END:variables
 }

@@ -29,6 +29,18 @@ public class ThongKeBUS {
     }
 
     public List<Integer> getFilteredNumberOfMembersForDate(Date dateStart, Date dateEnd) {
-        return thongKeDAL.getFilteredNumberOfMembersForDate(dateStart,dateEnd);
+        return thongKeDAL.getFilteredNumberOfMembersForDate(dateStart, dateEnd);
+    }
+
+    public List<Integer> getAllTrangThaiXL() {
+        return thongKeDAL.getAllTrangThaiXL();
+    }
+
+    public int getCountForStatus(int status) {
+        return thongKeDAL.getCountForStatus(status);
+    }
+
+    public int getTotalAmount() {
+        return thongKeDAL.getTotalAmount();
     }
 }

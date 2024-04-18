@@ -178,5 +178,8 @@ public class thongtinsdDAL {
         }
         return deviceList;
     }
+    public static void main(String[] args) {
+        thongtinsd tt = new thongtinsd();
+    }
 
 }
