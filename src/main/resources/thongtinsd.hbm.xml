@@ -9,11 +9,11 @@
         
         <property name="maTB" column="MaTB" type="int"/>
 
-        <property name="tgVao" column="TGVao" type="date"/>
+        <property name="tgVao" column="TGVao" type="timestamp"/>
         
-        <property name="tgMuon" column="TGMuon" type="date"/>
+        <property name="tgMuon" column="TGMuon" type="timestamp"/>
         
-        <property name="tgTra" column="TGTra" type="date"/>
+        <property name="tgTra" column="TGTra" type="timestamp"/>
 
     </class>
 </hibernate-mapping>

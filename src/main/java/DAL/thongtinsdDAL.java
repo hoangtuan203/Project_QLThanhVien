@@ -157,7 +157,7 @@ public class thongtinsdDAL {
         }
         return deviceList;
     }
-    
+
     public static List<thongtinsd> ListByDeviceDescription(String deviceDescription) {
         List<thongtinsd> deviceList = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -178,8 +178,20 @@ public class thongtinsdDAL {
         }
         return deviceList;
     }
+
     public static void main(String[] args) {
         thongtinsd tt = new thongtinsd();
+        try {
+            // Gọi phương thức để lấy danh sách thông tin sử dụng thiết bị
+            List<thongtinsd> list = selectAll();
+
+            // In ra danh sách thông tin sử dụng thiết bị
+            for (thongtinsd ttsd : list) {
+                System.out.println(ttsd); // Giả sử có phương thức toString() đã được định nghĩa trong class thongtinsd
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

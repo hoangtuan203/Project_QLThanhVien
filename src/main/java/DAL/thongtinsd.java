@@ -5,6 +5,7 @@
 package DAL;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,16 +35,16 @@ public class thongtinsd implements Serializable {
     @JoinColumn(name = "maTB")
     private int maTB;
     @Column(name = "TGVao")
-    private Date tgVao;
+    private Timestamp tgVao;
     @Column(name = "TGMuon")
-    private Date tgMuon;
+    private Timestamp tgMuon;
     @Column(name = "TGTra")
-    private Date tgTra;
+    private Timestamp tgTra;
 
     public thongtinsd() {
     }
 
-    public thongtinsd(int maTT, int maTV, int maTB, Date tgVao, Date tgMuon, Date tgTra) {
+    public thongtinsd(int maTT, int maTV, int maTB, Timestamp tgVao, Timestamp tgMuon, Timestamp tgTra) {
         this.maTT = maTT;
         this.maTV = maTV;
         this.maTB = maTB;
@@ -80,7 +81,7 @@ public class thongtinsd implements Serializable {
         return tgVao;
     }
 
-    public void setTgVao(Date tgVao) {
+    public void setTgVao(Timestamp tgVao) {
         this.tgVao = tgVao;
     }
 
@@ -88,7 +89,7 @@ public class thongtinsd implements Serializable {
         return tgMuon;
     }
 
-    public void setTgMuon(Date tgMuon) {
+    public void setTgMuon(Timestamp tgMuon) {
         this.tgMuon = tgMuon;
     }
 
@@ -96,10 +97,13 @@ public class thongtinsd implements Serializable {
         return tgTra;
     }
 
-    public void setTgTra(Date tgTra) {
+    public void setTgTra(Timestamp tgTra) {
         this.tgTra = tgTra;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "thongtinsd{" + "maTT=" + maTT + ", maTV=" + maTV + ", maTB=" + maTB + ", tgVao=" + tgVao + ", tgMuon=" + tgMuon + ", tgTra=" + tgTra + '}';
+    }
 
 }
