@@ -242,7 +242,7 @@ public class addxuly extends javax.swing.JDialog {
         }
         xuly xulyadd = new xuly(0, selectedOption, hinhthuc, null, today, 1);
 //                System.out.println(toString(xulyadd));                        
-        if (addxuly.add(xulyadd)) {
+        if (addxuly.addXL(xulyadd)) {
             System.out.println("theem thanh comng");
         } else {
             System.out.println("thaa bai");

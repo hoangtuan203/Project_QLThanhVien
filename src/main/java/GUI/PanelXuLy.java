@@ -275,7 +275,7 @@ public class PanelXuLy extends javax.swing.JPanel {
         if (i >= 0) {
             int maxl = (Integer) tablexuly.getValueAt(i, 1);
             xuly delxl = xulydel.selectxulybymaxl(maxl);
-            if (xulydel.delete(delxl)) {
+            if (xulydel.deleteXL(delxl)) {
                 JOptionPane.showMessageDialog(this, "Xóa xử lý thành công");
             } else {
                 JOptionPane.showMessageDialog(this, "thất bại");
@@ -319,7 +319,7 @@ public class PanelXuLy extends javax.swing.JPanel {
             Date date = java.sql.Date.valueOf(localDate);
             System.out.println(date);
             int trangthai = cbox0.isSelected() ? 0 : 1;
-            if (xulyupdate.update(new xuly(maxl, matv, hinhthuc, sotien, date, trangthai))) {
+            if (xulyupdate.updateXL(new xuly(maxl, matv, hinhthuc, sotien, date, trangthai))) {
                 JOptionPane.showMessageDialog(this, "Sửa xử lý thành công");
             } else {
                  JOptionPane.showMessageDialog(this, "Sửa xử lý fail");
@@ -341,13 +341,13 @@ public class PanelXuLy extends javax.swing.JPanel {
                 case "Khóa thẻ 1 tháng":
                     if (isOneMonthBefore(calendar)) {
                         i.setTrangThaiXL(0);
-                        upd.update(i);
+                        upd.updateXL(i);
                     }
                     break;
                 case "Khóa thẻ 2 tháng":
                     if (isTwoMonthsBefore(calendar)) {
                         i.setTrangThaiXL(0);
-                        upd.update(i);
+                        upd.updateXL(i);
                     }
                     break;
             }
