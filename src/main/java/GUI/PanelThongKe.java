@@ -14,6 +14,7 @@ import DAL.xulyDAL;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -359,13 +360,92 @@ public class PanelThongKe extends javax.swing.JPanel {
 
         List<thietbi> listtb = tbbus.getAllDevice();
         List<thongtinsd> listttsd = ttsdbus.getAllDevice();
-
+        String datebd = tgbd.split(" ")[0];
+        String yearbd = datebd.split("-")[0];
+        String monthbd = datebd.split("-")[1];
+        String daybd = datebd.split("-")[2];
+        
+        String timebd = tgbd.split(" ")[1];
+        String hourbd = timebd.split(":")[0];
+        String minbd = timebd.split(":")[1];
+        String secbd = timebd.split(":")[2];
+        
+        String datekt = tgkt.split(" ")[0];
+        String yearkt = datekt.split("-")[0];
+        String monthkt = datekt.split("-")[1];
+        String daykt = datekt.split("-")[2];
+        
+        String timekt = tgkt.split(" ")[1];
+        String hourkt = timekt.split(":")[0];
+        String minkt = timekt.split(":")[1];
+        String seckt = timekt.split(":")[2];
         model.setRowCount(0);
-        if (tgbd.equalsIgnoreCase("") && tgkt.equalsIgnoreCase("")) {
-            int stt = 1;
-            for (thietbi i : listtb) {
-                for (thongtinsd j : listttsd) {
+        int stt = 1;
+        for (thietbi i : listtb) {
+            int s = 0;
+            for (thongtinsd j : listttsd) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String valuebd = sdf.format(j.getTgMuon());
+                String valuekt = sdf.format(j.getTgTra());
+
+                String datebdv = valuebd.split(" ")[0];
+                String yearbdv = datebdv.split("-")[0];
+                String monthbdv = datebdv.split("-")[1];
+                String daybdv = datebdv.split("-")[2];
+
+                String timebdv = valuebd.split(" ")[1];
+                String hourbdv = timebdv.split(":")[0];
+                String minbdv = timebdv.split(":")[1];
+                String secbdv = timebdv.split(":")[2];
+
+                String datektv = valuekt.split(" ")[0];
+                String yearktv = datektv.split("-")[0];
+                String monthktv = datektv.split("-")[1];
+                String dayktv = datektv.split("-")[2];
+
+                String timektv = valuekt.split(" ")[1];
+                String hourktv = timektv.split(":")[0];
+                String minktv = timektv.split(":")[1];
+                String secktv = timektv.split(":")[2];
+                if(trangthai == 0) {
+                    int l = 0;
                     if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
+                        s++;
+                        if(Integer.parseInt(yearbd) > Integer.parseInt(yearktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) > Integer.parseInt(monthktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) > Integer.parseInt(dayktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) > Integer.parseInt(hourktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) == Integer.parseInt(hourktv)
+                                && Integer.parseInt(minbd) > Integer.parseInt(minktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) == Integer.parseInt(hourktv)
+                                && Integer.parseInt(minbd) == Integer.parseInt(minktv)
+                                && Integer.parseInt(secbd) > Integer.parseInt(secktv))  {
+                            l = 1;
+                        }
+                    }
+                    
+                    if(l == 1) {
+                        if(model.getRowCount() != 0) {
+                            System.out.println(stt--);
+                            model.removeRow(stt - 1);
+                        }
                         Object[] row = {
                             stt++,
                             i.getMaTB(),
@@ -378,6 +458,92 @@ public class PanelThongKe extends javax.swing.JPanel {
                         model.addRow(row);
                     }
                 }
+                else if (trangthai == 1){
+                    int l = 0;
+                    s++;
+                    if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
+                        if(Integer.parseInt(yearbd) < Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) >= Integer.parseInt(yearktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) < Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) >= Integer.parseInt(monthktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) < Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) >= Integer.parseInt(dayktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                            && Integer.parseInt(hourbd) < Integer.parseInt(hourbdv) 
+                            && Integer.parseInt(hourkt) >= Integer.parseInt(hourktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                            && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv) 
+                            && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
+                            && Integer.parseInt(minbd) < Integer.parseInt(minbdv) 
+                            && Integer.parseInt(minkt) >= Integer.parseInt(minktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                            && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv) 
+                            && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
+                            && Integer.parseInt(minbd) == Integer.parseInt(minbdv) 
+                            && Integer.parseInt(minkt) == Integer.parseInt(minktv)
+                            && Integer.parseInt(secbd) < Integer.parseInt(secbdv) 
+                            && Integer.parseInt(seckt) >= Integer.parseInt(secktv)) {
+                            l = 1;
+                        }
+                    }
+                    
+                    if(l == 1) {
+                        if(model.getRowCount() != 0) {
+                            System.out.println(stt--);
+                            model.removeRow(stt - 1);
+                        }
+                        Object[] row = {
+                            stt++,
+                            i.getMaTB(),
+                            i.getTenTB(),
+                            i.getMoTaTB(),
+                            j.getTgVao(),
+                            j.getTgMuon(),
+                            j.getTgTra()
+                        };
+                        model.addRow(row);
+                    }
+                }
+            }
+            
+            if(i.getTenTB().equalsIgnoreCase(tentb) && s == 0) {
+                Object[] row = {
+                    stt++,
+                    i.getMaTB(),
+                    i.getTenTB(),
+                    i.getMoTaTB(),
+                    "chua co",
+                    "chua co",
+                    "chua co"
+                };
+                model.addRow(row);
+                break;
             }
         }
     }
@@ -755,10 +921,10 @@ public class PanelThongKe extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox5ActionPerformed
 
     private void btnFind1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFind1ActionPerformed
-        searchDevice("", "", (String) tentbcbb.getSelectedItem(), 1);
-//        System.out.println(dateSpinnerbd.getValue());
-//        System.out.println(dateSpinnerkt.getValue());
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datebd = sdf.format(dateSpinnerbd.getValue());
+        String datekt = sdf.format(dateSpinnerkt.getValue());
+        searchDevice(datebd, datekt, (String) tentbcbb.getSelectedItem(), jComboBox5.getSelectedIndex());
     }//GEN-LAST:event_btnFind1ActionPerformed
 
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnFindActionPerformed
