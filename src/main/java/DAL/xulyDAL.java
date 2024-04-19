@@ -18,7 +18,7 @@ import org.hibernate.Transaction;
  */
 public class xulyDAL {
 
-            public static List<xuly> selectAll() {
+    public static List<xuly> selectAll() {
         List<xuly> list = new ArrayList();
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -37,7 +37,31 @@ public class xulyDAL {
         }
         return list;
     }
-    
+
+    public static List<Integer> selecttvxl() {
+        List<Integer> list = new ArrayList();
+        try {
+            SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+            if (sessionFactory != null) {
+                Session session = sessionFactory.openSession();
+                Transaction tr = session.beginTransaction();
+                // Thuc thi cau lenh HQL
+                String hql = "SELECT thongtinsd.MaTV "
+                        + "FROM thongtinsd "
+                        + "JOIN thanhvien ON thongtinsd.MaTV = thanhvien.MaTV "
+                        + "JOIN xuly ON thanhvien.MaTV = xuly.MaTV "
+                        + "WHERE DATE(TGTra) = CURRENT_DATE() AND xuly.TrangThaiXL = 0";
+                Query query = session.createQuery(hql);
+                list = query.getResultList();
+                tr.commit();
+                session.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public static xuly selectxulybymaxl(int maxl) {
         xuly result = null;
         try {
@@ -86,8 +110,6 @@ public class xulyDAL {
         return list;
     }
 
-  
-
     public static boolean deleteXL(xuly t) {
         try {
             SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -123,38 +145,36 @@ public class xulyDAL {
         return false;
     }
 
+    public static List<xuly> searchXL(String keyword) {
+        List<xuly> searchResult = new ArrayList<>();
 
+        try {
+            SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+            if (sessionFactory != null) {
+                Session session = sessionFactory.openSession();
+                Transaction tr = session.beginTransaction();
 
-public static List<xuly> searchXL(String keyword) {
-    List<xuly> searchResult = new ArrayList<>();
+                // Sử dụng câu truy vấn HQL (Hibernate Query Language) để tìm kiếm các bản ghi
+                Query query = session.createQuery("FROM xuly WHERE MaXL LIKE :keyword OR MaTV LIKE :keyword OR HinhThucXL LIKE :keyword OR SoTien LIKE :keyword OR NgayXL LIKE :keyword OR TrangThaiXL LIKE :keyword");
+                query.setParameter("keyword", "%" + keyword + "%");
+                List result = query.getResultList();
 
-    try {
-        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        if (sessionFactory != null) {
-            Session session = sessionFactory.openSession();
-            Transaction tr = session.beginTransaction();
-
-            // Sử dụng câu truy vấn HQL (Hibernate Query Language) để tìm kiếm các bản ghi
-            Query query = session.createQuery("FROM xuly WHERE MaXL LIKE :keyword OR MaTV LIKE :keyword OR HinhThucXL LIKE :keyword OR SoTien LIKE :keyword OR NgayXL LIKE :keyword OR TrangThaiXL LIKE :keyword");
-            query.setParameter("keyword", "%" + keyword + "%");
-            List result = query.getResultList();
-
-            for (Object obj : result) {
-                if (obj instanceof xuly) {
-                    xuly x = (xuly) obj;
-                    searchResult.add(x);
+                for (Object obj : result) {
+                    if (obj instanceof xuly) {
+                        xuly x = (xuly) obj;
+                        searchResult.add(x);
+                    }
                 }
+
+                tr.commit();
+                session.close();
             }
-
-            tr.commit();
-            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
 
-    return searchResult;
-}
+        return searchResult;
+    }
 
     public static boolean updateXL(xuly t) {
         try {
@@ -173,8 +193,7 @@ public static List<xuly> searchXL(String keyword) {
         return false;
     }
 
-    }
+}
 
-   
 // Phương thức để tính toán giá trị mới cho trường maXL
 

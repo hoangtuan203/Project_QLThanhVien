@@ -255,18 +255,13 @@ public class addxuly extends javax.swing.JDialog {
     }//GEN-LAST:event_cbxnmatvActionPerformed
     private void filltvvipham() {
 
-        List<thongtinsd> dstv = xulyBUS.selectalltv();
-        List<xuly> dsxl = xulyBUS.selectAll();
-        int flag = 0;
-        for (thongtinsd matv : dstv) {
-            for (xuly i : dsxl) {
-                if (matv.getMaTV() == i.getMaTV() && i.getTrangThaiXL() == 1) {
-                    flag++;
-                }
-            }
-            if (flag ==0) {
-                cbxnmatv.addItem(matv.getMaTV()+"");
-            }
+        List<Integer> dstv = xulyBUS.selecttvxl();
+        
+    
+        for (Integer matv : dstv) {
+           
+                cbxnmatv.addItem(matv +"");
+            
 
         }
 
