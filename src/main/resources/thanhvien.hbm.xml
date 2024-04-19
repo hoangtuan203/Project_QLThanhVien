@@ -11,5 +11,7 @@
 
         <property name="nganh" column="Nganh" type="string"/>
         <property name="sdt" column="SDT" type="int"/>
+        <property name="password" column="Password" type="string"/>
+        <property name="email" column="Email" type="string"/>
     </class>
 </hibernate-mapping>

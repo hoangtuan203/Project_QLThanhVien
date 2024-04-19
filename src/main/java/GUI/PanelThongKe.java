@@ -8,6 +8,7 @@ import DAL.xuly;
 import DAL.xulyDAL;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
@@ -32,12 +33,13 @@ import org.jfree.data.statistics.HistogramDataset;
  */
 public class PanelThongKe extends javax.swing.JPanel {
 
-    PaneThanhVien pane = new PaneThanhVien();
+    PaneThanhVien pane;
 
     /**
      * Creates new form PanelThongKe
      */
-    public PanelThongKe() {
+    public PanelThongKe() throws SQLException {
+        this.pane = new PaneThanhVien();
         initComponents();
         showPieChart();
         showBarChart();
