@@ -105,7 +105,7 @@ public class ThongKeDAL {
 
     public List<String> getAllKhoa() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT DISTINCT tv.khoa FROM ThanhVien tv";
+            String hql = "SELECT DISTINCT tv.khoa FROM thanhvien tv";
             Query<String> query = session.createQuery(hql, String.class);
             return query.getResultList();
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class ThongKeDAL {
 
     public List<String> getAllNganh() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "SELECT DISTINCT tv.nganh FROM ThanhVien tv";
+            String hql = "SELECT DISTINCT tv.nganh FROM thanhvien tv";
             Query<String> query = session.createQuery(hql, String.class);
             return query.getResultList();
         } catch (Exception e) {
