@@ -5,6 +5,7 @@
 package DAL;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 public class thongtinsd implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaTT")
     private int maTT;
     @ManyToOne
@@ -34,22 +35,41 @@ public class thongtinsd implements Serializable {
     @JoinColumn(name = "maTB")
     private int maTB;
     @Column(name = "TGVao")
-    private Date tgVao;
+    private Timestamp tgVao;
     @Column(name = "TGMuon")
-    private Date tgMuon;
+    private Timestamp tgMuon;
     @Column(name = "TGTra")
-    private Date tgTra;
-
+    private Timestamp tgTra;
+    @Column(name = "TGDatCho")
+    private Timestamp tgDatCho;
     public thongtinsd() {
     }
 
-    public thongtinsd(int maTT, int maTV, int maTB, Date tgVao, Date tgMuon, Date tgTra) {
+    
+    public thongtinsd(int maTT, int maTV, int maTB, Timestamp tgVao, Timestamp tgMuon, Timestamp tgTra, Timestamp tgDatCho) {
         this.maTT = maTT;
         this.maTV = maTV;
         this.maTB = maTB;
         this.tgVao = tgVao;
         this.tgMuon = tgMuon;
         this.tgTra = tgTra;
+        this.tgDatCho = tgDatCho;
+    }
+    public thongtinsd(int maTT, int maTV, Timestamp tgVao, Timestamp tgMuon, Timestamp tgTra, Timestamp tgDatCho) {
+        this.maTT = maTT;
+        this.maTV = maTV;
+        this.tgVao = tgVao;
+        this.tgMuon = tgMuon;
+        this.tgTra = tgTra;
+        this.tgDatCho = tgDatCho;
+    }
+
+    public Timestamp getTgDatCho() {
+        return tgDatCho;
+    }
+
+    public void setTgDatCho(Timestamp tgDatCho) {
+        this.tgDatCho = tgDatCho;
     }
 
     public int getMaTT() {
@@ -80,7 +100,7 @@ public class thongtinsd implements Serializable {
         return tgVao;
     }
 
-    public void setTgVao(Date tgVao) {
+    public void setTgVao(Timestamp tgVao) {
         this.tgVao = tgVao;
     }
 
@@ -88,7 +108,7 @@ public class thongtinsd implements Serializable {
         return tgMuon;
     }
 
-    public void setTgMuon(Date tgMuon) {
+    public void setTgMuon(Timestamp tgMuon) {
         this.tgMuon = tgMuon;
     }
 
@@ -96,10 +116,13 @@ public class thongtinsd implements Serializable {
         return tgTra;
     }
 
-    public void setTgTra(Date tgTra) {
+    public void setTgTra(Timestamp tgTra) {
         this.tgTra = tgTra;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "thongtinsd{" + "maTT=" + maTT + ", maTV=" + maTV + ", maTB=" + maTB + ", tgVao=" + tgVao + ", tgMuon=" + tgMuon + ", tgTra=" + tgTra + '}';
+    }
 
 }

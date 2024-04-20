@@ -4,10 +4,43 @@
  */
 package BUS;
 
+import DAL.ThongKeDAL;
+import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author ASUS
  */
 public class ThongKeBUS {
-    
+
+    ThongKeDAL thongKeDAL = new ThongKeDAL();
+
+    public static List<Date> getAllDateVao() {
+        return ThongKeDAL.layDanhSachNgay();
+    }
+
+    public List<Integer> getNumberOfMembersForDate() {
+        return thongKeDAL.getCountOfMembersForEachDate();
+    }
+
+    public List<Date> getFilteredDateVao(Date dateStart, Date dateEnd) {
+        return thongKeDAL.getFilteredDateVao(dateStart, dateEnd);
+    }
+
+    public List<Integer> getFilteredNumberOfMembersForDate(Date dateStart, Date dateEnd) {
+        return thongKeDAL.getFilteredNumberOfMembersForDate(dateStart, dateEnd);
+    }
+
+    public List<Integer> getAllTrangThaiXL() {
+        return thongKeDAL.getAllTrangThaiXL();
+    }
+
+    public int getCountForStatus(int status) {
+        return thongKeDAL.getCountForStatus(status);
+    }
+
+    public int getTotalAmount() {
+        return thongKeDAL.getTotalAmount();
+    }
 }

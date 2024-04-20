@@ -6,6 +6,7 @@ package DAL;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,18 +15,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.transaction.Transactional;
 
 /**
  *
  * @author ASUS
  */
+@Transactional
 @Entity
 @Table(name = "xuly")
 public class xuly implements Serializable {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int maXL;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int maXL;
 
     @ManyToOne
     @JoinColumn(name = "maTV")
@@ -37,14 +40,14 @@ public class xuly implements Serializable {
 
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date ngayXL;
-
+//    @Column(name = "TrangThaiXL")
     private int trangThaiXL;
 
     public xuly() {
     }
 
-    public xuly(int maXL, int maTV, String hinhThucXL, int soTien, Date ngayXL, int trangThaiXL) {
-        
+    public xuly(int maXL, int maTV, String hinhThucXL, Integer soTien, Date ngayXL, int trangThaiXL) {
+        this.maXL =  maXL;
         this.maTV = maTV;
         this.hinhThucXL = hinhThucXL;
         this.soTien = soTien;

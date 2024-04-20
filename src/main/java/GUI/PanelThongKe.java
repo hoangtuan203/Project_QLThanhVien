@@ -4,18 +4,36 @@
  */
 package GUI;
 
+import BUS.ThongKeBUS;
+import BUS.thietbiBUS;
+import BUS.thongtinsdBUS;
+import DAL.thietbi;
+import DAL.thongtinsd;
 import DAL.xuly;
 import DAL.xulyDAL;
 import java.awt.BorderLayout;
 import java.awt.Color;
+
 import java.sql.SQLException;
+
+import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import java.util.Date;
 import java.util.List;
+import javax.swing.GroupLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -33,7 +51,16 @@ import org.jfree.data.statistics.HistogramDataset;
  */
 public class PanelThongKe extends javax.swing.JPanel {
 
-    PaneThanhVien pane;
+
+    PaneThanhVien pane = new PaneThanhVien();
+    ThongKeBUS thongKeBUS = new ThongKeBUS();
+    private thietbiBUS tbbus = new thietbiBUS();
+    private thongtinsdBUS ttsdbus = new thongtinsdBUS();
+    private JSpinner dateSpinnerbd;
+    private SpinnerDateModel spinnerDateModelbd;
+    private JSpinner dateSpinnerkt;
+    private SpinnerDateModel spinnerDateModelkt;
+
 
     /**
      * Creates new form PanelThongKe
@@ -41,106 +68,238 @@ public class PanelThongKe extends javax.swing.JPanel {
     public PanelThongKe() throws SQLException {
         this.pane = new PaneThanhVien();
         initComponents();
+        loadTotalAmount();
+        spinnerDateModelbd = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
+        dateSpinnerbd = new JSpinner(spinnerDateModelbd);
+        JSpinner.DateEditor dateEditorbd = new JSpinner.DateEditor(dateSpinnerbd, "dd/MM/yyyy HH:mm:ss");
+        dateSpinnerbd.setEditor(dateEditorbd);
+
+        spinnerDateModelkt = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
+        dateSpinnerkt = new JSpinner(spinnerDateModelkt);
+        JSpinner.DateEditor dateEditorkt = new JSpinner.DateEditor(dateSpinnerkt, "dd/MM/yyyy HH:mm:ss");
+        dateSpinnerkt.setEditor(dateEditorkt);
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 110, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerbd)
+        );
+        jPanel7Layout.setVerticalGroup(
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 22, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerbd)
+        );
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 128, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerkt)
+        );
+        jPanel8Layout.setVerticalGroup(
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 22, Short.MAX_VALUE)
+                        .addComponent(dateSpinnerkt)
+        );
+
         showPieChart();
-        showBarChart();
+        // showBarChart();
+        showLineChart();
         displaytablexuly();
+        showDevice();
     }
 
     public void showPieChart() {
+        // Lấy danh sách trạng thái từ cơ sở dữ liệu
+        List<Integer> statuses = thongKeBUS.getAllTrangThaiXL(); // Gọi phương thức đã được định nghĩa trước đó
 
-        DefaultPieDataset barDataset = new DefaultPieDataset();
-        barDataset.setValue("IPhone 5s", Double.valueOf(20));
-        barDataset.setValue("SamSung Grand", Double.valueOf(20));
-        barDataset.setValue("MotoG", Double.valueOf(40));
-        barDataset.setValue("Nokia Lumia", Double.valueOf(10));
+        // Tạo dataset cho Pie Chart
+        DefaultPieDataset pieDataset = new DefaultPieDataset();
 
-        JFreeChart piechart = ChartFactory.createPieChart("mobile sales", barDataset, false, true, false);//explain
+        // Tính tổng số lượng trạng thái
+        int totalCount = statuses.size(); // Số lượng trạng thái là độ dài của danh sách
 
-        PiePlot piePlot = (PiePlot) piechart.getPlot();
+        // Thêm dữ liệu vào dataset và đặt nhãn cho từng phần tử
+        for (Integer status : statuses) {
+            int count = thongKeBUS.getCountForStatus(status); // Lấy số lượng dựa trên trạng thái, bạn cần tự triển khai
 
-        piePlot.setSectionPaint("IPhone 5s", new Color(255, 255, 102));
-        piePlot.setSectionPaint("SamSung Grand", new Color(102, 255, 102));
-        piePlot.setSectionPaint("MotoG", new Color(255, 102, 153));
-        piePlot.setSectionPaint("Nokia Lumia", new Color(0, 204, 204));
+            // Đặt nhãn cho từng phần tử
+            String label;
+            switch (status) {
+                case 0:
+                    label = "Đang Xử Lý";
+                    break;
+                case 1:
+                    label = "Đã Xử Lý";
+                    break;
+                default:
+                    label = "Khác"; // Có thể thay đổi tùy theo nhu cầu của bạn
+                    break;
+            }
 
-        piePlot.setBackgroundPaint(Color.white);
+            // Tính phần trăm
+            double percentage = ((double) count / (double) totalCount) * 100.0;
 
-        ChartPanel barChartPanel = new ChartPanel(piechart);
+            // Thêm dữ liệu vào dataset
+            pieDataset.setValue(label, percentage);
+        }
+
+        // Tạo Pie Chart
+        JFreeChart pieChart = ChartFactory.createPieChart("Status Distribution", pieDataset, true, true, false);
+
+        // Cài đặt hiển thị phần trăm trên các phần tử của biểu đồ
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} ({2})");
+        plot.setLegendLabelGenerator(labelGenerator);
+
+        // Tạo Panel để hiển thị biểu đồ
+        ChartPanel chartPanel = new ChartPanel(pieChart);
+
+        // Thêm Panel vào frame hoặc container của bạn
         pnXuLy.removeAll();
-        pnXuLy.add(barChartPanel, BorderLayout.CENTER);
+        pnXuLy.add(chartPanel, BorderLayout.CENTER);
         pnXuLy.validate();
     }
 
-    /*=============================================================================*/
-    public void showLineChart() {
-        //create dataset for the graph
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.setValue(200, "Amount", "january");
-        dataset.setValue(150, "Amount", "february");
-        dataset.setValue(18, "Amount", "march");
-        dataset.setValue(100, "Amount", "april");
-        dataset.setValue(80, "Amount", "may");
-        dataset.setValue(250, "Amount", "june");
+    // tinh tong tien phat 
+    public void loadTotalAmount() {
+        // Gọi phương thức để lấy tổng số tiền
+        int totalAmount = thongKeBUS.getTotalAmount();
 
-        //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("contribution", "monthly", "amount",
+        // Gán giá trị tổng số tiền vào TextField
+        if (totalAmount == 0) {
+            txtTongTienPhat.setText("0");
+        } else {
+            txtTongTienPhat.setText(String.valueOf(totalAmount));
+        }
+    }
+
+    public void showLineChart() {
+        // create dataset for the graph
+        List<Date> thoiDiemList = thongKeBUS.getAllDateVao();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        List<Integer> listQuantity = thongKeBUS.getNumberOfMembersForDate();
+
+        // Duyệt qua danh sách ngày và số lượng tương ứng
+        for (int i = 0; i < thoiDiemList.size(); i++) {
+            Date date = thoiDiemList.get(i);
+            Integer quantity = listQuantity.get(i);
+
+            // Kiểm tra xem ngày và số lượng có null không
+            if (date != null && quantity != null) {
+                // Kiểm tra xem ngày hiện tại có trùng với ngày trước đó không
+                if (i > 0 && thoiDiemList.get(i - 1) != null && thoiDiemList.get(i - 1).equals(date)) {
+                    // Nếu trùng, tăng giá trị quantity lên 1
+                    quantity++;
+                }
+
+                // Thêm giá trị vào dataset
+                dataset.addValue(quantity, "Quantity", date);
+            }
+        }
+        // create chart
+        JFreeChart linechart = ChartFactory.createLineChart("Thống Kê Số Lượng Vào Khu Học Tập", "Thời Gian",
+                "Số Lượng",
                 dataset, PlotOrientation.VERTICAL, false, true, false);
 
-        //create plot object
+        // create plot object
         CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
         // lineCategoryPlot.setRangeGridlinePaint(Color.BLUE);
         lineCategoryPlot.setBackgroundPaint(Color.white);
 
-        //create render object to change the moficy the line properties like color
+        // create render object to change the moficy the line properties like color
         LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
         Color lineChartColor = new Color(204, 0, 51);
         lineRenderer.setSeriesPaint(0, lineChartColor);
 
-        //create chartPanel to display chart(graph)
+        // create chartPanel to display chart(graph)
         ChartPanel lineChartPanel = new ChartPanel(linechart);
-//        panelLineChart.removeAll();
-//        panelLineChart.add(lineChartPanel, BorderLayout.CENTER);
-//        panelLineChart.validate();
+        pnThanhVien.removeAll();
+        pnThanhVien.add(lineChartPanel, BorderLayout.CENTER);
+        pnThanhVien.validate();
     }
 
-    /*========================================================================================*/
-    public void showHistogram() {
-
-        double[] values = {95, 49, 14, 59, 50, 66, 47, 40, 1, 67,
-            12, 58, 28, 63, 14, 9, 31, 17, 94, 71,
-            49, 64, 73, 97, 15, 63, 10, 12, 31, 62,
-            93, 49, 74, 90, 59, 14, 15, 88, 26, 57,
-            77, 44, 58, 91, 10, 67, 57, 19, 88, 84
-        };
-
-        HistogramDataset dataset = new HistogramDataset();
-        dataset.addSeries("key", values, 20);
-
-        JFreeChart chart = ChartFactory.createHistogram("JFreeChart Histogram", "Data", "Frequency", dataset, PlotOrientation.VERTICAL, false, true, false);
-        XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(Color.WHITE);
-
-        ChartPanel barpChartPanel2 = new ChartPanel(chart);
-        jPanel3.removeAll();
-        jPanel3.add(barpChartPanel2, BorderLayout.CENTER);
-        jPanel3.validate();
-    }
-
-    /*========================================================================================*/
-    public void showBarChart() {
-
-        List<Date> thoiDiemList = pane.getThoiDiemVaoKhuList();
-        System.out.println("List date:"+thoiDiemList);
+    /*
+     * =============================================================================
+     */
+    public void showLineChart(Date dateStart, Date dateEnd) {
+        // Tạo dataset mới để lưu trữ dữ liệu được lọc
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        // Thêm dữ liệu từ mảng data vào dataset
-        for (Date date : thoiDiemList) {
-            int count = getNumberOfMembersForDate(date); // Hàm này cần được cài đặt để lấy số lượng thành viên cho mỗi ngày
-            dataset.setValue(count, "Amount", date);
+        // Lấy dữ liệu từ thongKeBUS dựa trên ngày bắt đầu và kết thúc
+        List<Date> thoiDiemList = thongKeBUS.getFilteredDateVao(dateStart, dateEnd);
+        List<Integer> listQuantity = thongKeBUS.getFilteredNumberOfMembersForDate(dateStart, dateEnd);
+
+        // Duyệt qua danh sách ngày và số lượng tương ứng
+        for (int i = 0; i < thoiDiemList.size(); i++) {
+            Date date = thoiDiemList.get(i);
+            Integer quantity = listQuantity.get(i);
+
+            // Kiểm tra xem ngày và số lượng có null không
+            if (date != null && quantity != null) {
+                // Kiểm tra xem ngày hiện tại có trùng với ngày trước đó không
+                if (i > 0 && thoiDiemList.get(i - 1) != null && thoiDiemList.get(i - 1).equals(date)) {
+                    // Nếu trùng, tăng giá trị quantity lên 1
+                    quantity++;
+                }
+
+                // Thêm giá trị vào dataset
+                dataset.addValue(quantity, "Quantity", date);
+            }
         }
 
         // Tạo biểu đồ
-        JFreeChart chart = ChartFactory.createBarChart("Thống Kê Thành Viên Vào Khu Học Tập", "Thời Gian", "Số Lượng",
+        JFreeChart linechart = ChartFactory.createLineChart("Thống Kê Số Lượng Vào Khu Học Tập", "Thời Gian",
+                "Số Lượng",
+                dataset, PlotOrientation.VERTICAL, false, true, false);
+
+        // Cấu hình biểu đồ
+        CategoryPlot lineCategoryPlot = linechart.getCategoryPlot();
+        lineCategoryPlot.setBackgroundPaint(Color.white);
+
+        LineAndShapeRenderer lineRenderer = (LineAndShapeRenderer) lineCategoryPlot.getRenderer();
+        Color lineChartColor = new Color(204, 0, 51);
+        lineRenderer.setSeriesPaint(0, lineChartColor);
+
+        // Tạo panel chứa biểu đồ
+        ChartPanel lineChartPanel = new ChartPanel(linechart);
+
+        // Hiển thị biểu đồ trên giao diện
+        pnThanhVien.removeAll();
+        pnThanhVien.add(lineChartPanel, BorderLayout.CENTER);
+        pnThanhVien.validate();
+    }
+
+    /*
+     * =============================================================================
+     * ===========
+     */
+    public void showBarChart() {
+
+        List<Date> thoiDiemList = thongKeBUS.getAllDateVao();
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        List<Integer> listQuantity = thongKeBUS.getNumberOfMembersForDate();
+
+        // Duyệt qua danh sách ngày và số lượng tương ứng
+        for (int i = 0; i < thoiDiemList.size(); i++) {
+            Date date = thoiDiemList.get(i);
+            int quantity = listQuantity.get(i);
+
+            // Kiểm tra nếu ngày trước đó trùng với ngày hiện tại
+            if (i > 0 && thoiDiemList.get(i - 1).equals(date)) {
+                // Nếu trùng, tăng giá trị quantity lên 1
+                quantity++;
+            }
+
+            // Thêm giá trị vào dataset
+            dataset.addValue(quantity, "Quantity", date);
+        }
+
+        // Tạo biểu đồ
+        JFreeChart chart = ChartFactory.createBarChart("Thành Viên Vào Khu Học Tập", "Thời Gian", "Số Lượng",
                 dataset, PlotOrientation.VERTICAL, false, true, false);
 
         // Tùy chỉnh màu sắc và nền của biểu đồ
@@ -161,16 +320,7 @@ public class PanelThongKe extends javax.swing.JPanel {
         pnThanhVien.validate();
     }
 
-    private int getNumberOfMembersForDate(Date date) {
-        int count = 0;
-        // xử lí ở đây nếu date = nhau thì count++
-//        if(date){
-//            count++;
-//        }
-        return 0; // Giả sử trả về số lượng thành viên cho mỗi ngày là 0
-    }
-
-    //load data tabel xuly
+    // load data tabel xuly
     public void displaytablexuly() {
         List<xuly> display = xulyDAL.selectAll();
         DefaultTableModel model = (DefaultTableModel) tableXuLy.getModel();
@@ -189,44 +339,421 @@ public class PanelThongKe extends javax.swing.JPanel {
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    public void showDevice() {
+        List<thietbi> listtb = tbbus.getAllDevice();
+        DefaultTableModel model = (DefaultTableModel) ThietBiTable.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+        for (thietbi i : listtb) {
+            Object[] row = {
+                stt++,
+                i.getMaTB(),
+                i.getTenTB(),
+                i.getMoTaTB(),};
+            model.addRow(row);
+        }
+    }
+
+    public void searchDevice(String tgbd, String tgkt, String tentb, int trangthai) {
+        DefaultTableModel model = (DefaultTableModel) ThietBiTable.getModel();
+        model.setColumnCount(0);
+        model.addColumn("STT");
+        model.addColumn("Mã TB");
+        model.addColumn("Tên TB");
+        model.addColumn("Mô Tả TB");
+        model.addColumn("Ngày Vào");
+        model.addColumn("Ngày Mượn");
+        model.addColumn("Ngày Trả");
+
+        List<thietbi> listtb = tbbus.getAllDevice();
+        List<thongtinsd> listttsd = ttsdbus.getAllDevice();
+        String datebd = tgbd.split(" ")[0];
+        String yearbd = datebd.split("-")[0];
+        String monthbd = datebd.split("-")[1];
+        String daybd = datebd.split("-")[2];
+        
+        String timebd = tgbd.split(" ")[1];
+        String hourbd = timebd.split(":")[0];
+        String minbd = timebd.split(":")[1];
+        String secbd = timebd.split(":")[2];
+        
+        String datekt = tgkt.split(" ")[0];
+        String yearkt = datekt.split("-")[0];
+        String monthkt = datekt.split("-")[1];
+        String daykt = datekt.split("-")[2];
+        
+        String timekt = tgkt.split(" ")[1];
+        String hourkt = timekt.split(":")[0];
+        String minkt = timekt.split(":")[1];
+        String seckt = timekt.split(":")[2];
+        model.setRowCount(0);
+        int stt = 1;
+        for (thietbi i : listtb) {
+            int s = 0;
+            for (thongtinsd j : listttsd) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String valuebd = sdf.format(j.getTgMuon());
+                String valuekt = sdf.format(j.getTgTra());
+
+                String datebdv = valuebd.split(" ")[0];
+                String yearbdv = datebdv.split("-")[0];
+                String monthbdv = datebdv.split("-")[1];
+                String daybdv = datebdv.split("-")[2];
+
+                String timebdv = valuebd.split(" ")[1];
+                String hourbdv = timebdv.split(":")[0];
+                String minbdv = timebdv.split(":")[1];
+                String secbdv = timebdv.split(":")[2];
+
+                String datektv = valuekt.split(" ")[0];
+                String yearktv = datektv.split("-")[0];
+                String monthktv = datektv.split("-")[1];
+                String dayktv = datektv.split("-")[2];
+
+                String timektv = valuekt.split(" ")[1];
+                String hourktv = timektv.split(":")[0];
+                String minktv = timektv.split(":")[1];
+                String secktv = timektv.split(":")[2];
+                if(trangthai == 0) {
+                    int l = 0;
+                    if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
+                        s++;
+                        if(Integer.parseInt(yearbd) > Integer.parseInt(yearktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) > Integer.parseInt(monthktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) > Integer.parseInt(dayktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) > Integer.parseInt(hourktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) == Integer.parseInt(hourktv)
+                                && Integer.parseInt(minbd) > Integer.parseInt(minktv))  {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                                && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) == Integer.parseInt(hourktv)
+                                && Integer.parseInt(minbd) == Integer.parseInt(minktv)
+                                && Integer.parseInt(secbd) > Integer.parseInt(secktv))  {
+                            l = 1;
+                        }
+                    }
+                    
+                    if(l == 1) {
+                        if(model.getRowCount() != 0) {
+                            System.out.println(stt--);
+                            model.removeRow(stt - 1);
+                        }
+                        Object[] row = {
+                            stt++,
+                            i.getMaTB(),
+                            i.getTenTB(),
+                            i.getMoTaTB(),
+                            j.getTgVao(),
+                            j.getTgMuon(),
+                            j.getTgTra()
+                        };
+                        model.addRow(row);
+                    }
+                }
+                else if (trangthai == 1){
+                    int l = 0;
+                    s++;
+                    if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
+                        if(Integer.parseInt(yearbd) < Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) >= Integer.parseInt(yearktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) < Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) >= Integer.parseInt(monthktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) < Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) >= Integer.parseInt(dayktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                            && Integer.parseInt(hourbd) < Integer.parseInt(hourbdv) 
+                            && Integer.parseInt(hourkt) >= Integer.parseInt(hourktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                            && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv) 
+                            && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
+                            && Integer.parseInt(minbd) < Integer.parseInt(minbdv) 
+                            && Integer.parseInt(minkt) >= Integer.parseInt(minktv)) {
+                            l = 1;
+                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
+                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
+                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
+                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                            && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv) 
+                            && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
+                            && Integer.parseInt(minbd) == Integer.parseInt(minbdv) 
+                            && Integer.parseInt(minkt) == Integer.parseInt(minktv)
+                            && Integer.parseInt(secbd) < Integer.parseInt(secbdv) 
+                            && Integer.parseInt(seckt) >= Integer.parseInt(secktv)) {
+                            l = 1;
+                        }
+                    }
+                    
+                    if(l == 1) {
+                        if(model.getRowCount() != 0) {
+                            System.out.println(stt--);
+                            model.removeRow(stt - 1);
+                        }
+                        Object[] row = {
+                            stt++,
+                            i.getMaTB(),
+                            i.getTenTB(),
+                            i.getMoTaTB(),
+                            j.getTgVao(),
+                            j.getTgMuon(),
+                            j.getTgTra()
+                        };
+                        model.addRow(row);
+                    }
+                }
+            }
+            
+            if(i.getTenTB().equalsIgnoreCase(tentb) && s == 0) {
+                Object[] row = {
+                    stt++,
+                    i.getMaTB(),
+                    i.getTenTB(),
+                    i.getMoTaTB(),
+                    "chua co",
+                    "chua co",
+                    "chua co"
+                };
+                model.addRow(row);
+                break;
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        pnThanhVien1 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        tentbcbb = new javax.swing.JComboBox<>();
+        btnFind1 = new javax.swing.JButton();
+        jComboBox5 = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        ThietBiTable = new javax.swing.JTable();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         pnThanhVien = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        dateStart = new com.toedter.calendar.JDateChooser();
         jLabel2 = new javax.swing.JLabel();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        dateEnd = new com.toedter.calendar.JDateChooser();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jComboBox3 = new javax.swing.JComboBox<>();
         jComboBox1 = new javax.swing.JComboBox<>();
+        btnSearch = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         pnXuLy = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableXuLy = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtTongTienPhat = new javax.swing.JTextField();
+
+        pnThanhVien1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        pnThanhVien1.setLayout(new java.awt.BorderLayout());
+
+        jLabel6.setText("Thời gian :");
+
+        jLabel7.setText("đến :");
+        jLabel7.setToolTipText("");
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+
+        jLabel8.setText("Tên:");
+
+        tentbcbb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Micro", "Bảng điện tử" }));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tentbcbb, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jLabel9))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addGap(13, 13, 13))
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tentbcbb)
+                .addGap(7, 7, 7))
+        );
+
+        btnFind1.setText("Lọc");
+        btnFind1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFind1ActionPerformed(evt);
+            }
+        });
+
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "được mượn theo thời gian", "đang được mượn theo thời gian" }));
+        jComboBox5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox5ActionPerformed(evt);
+            }
+        });
+
+        ThietBiTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "STT", "Mã TB", "Tên TB", "Mô Tả TB"
+            }
+        ));
+        jScrollPane2.setViewportView(ThietBiTable);
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 110, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 22, Short.MAX_VALUE)
+        );
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 128, Short.MAX_VALUE)
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 22, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(btnFind1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(pnThanhVien1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2)))
+                .addContainerGap(83, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFind1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(pnThanhVien1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+                        .addGap(14, 14, 14))))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 997, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 609, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Thiết Bị", jPanel2);
@@ -255,9 +782,9 @@ public class PanelThongKe extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, 0, 120, Short.MAX_VALUE)
@@ -275,6 +802,8 @@ public class PanelThongKe extends javax.swing.JPanel {
                 .addGap(13, 13, 13))
         );
 
+        btnSearch.setText("Lọc");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -282,42 +811,45 @@ public class PanelThongKe extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(241, 241, 241)
+                        .addGap(79, 79, 79)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addComponent(dateStart, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
-                        .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(222, 222, 222)
                         .addComponent(pnThanhVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel1))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(83, 83, 83)
-                        .addComponent(pnThanhVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(452, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(dateStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(dateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2))
+                                .addGap(90, 90, 90)
+                                .addComponent(pnThanhVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(500, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Thành Viên", jPanel1);
@@ -350,14 +882,14 @@ public class PanelThongKe extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(77, 77, 77))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtTongTienPhat, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
@@ -370,11 +902,11 @@ public class PanelThongKe extends javax.swing.JPanel {
                         .addGap(60, 60, 60)
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtTongTienPhat, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(305, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Xử Lý", jPanel3);
@@ -391,26 +923,63 @@ public class PanelThongKe extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox5ActionPerformed
+
+    private void btnFind1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFind1ActionPerformed
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String datebd = sdf.format(dateSpinnerbd.getValue());
+        String datekt = sdf.format(dateSpinnerkt.getValue());
+        searchDevice(datebd, datekt, (String) tentbcbb.getSelectedItem(), jComboBox5.getSelectedIndex());
+    }//GEN-LAST:event_btnFind1ActionPerformed
+
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnFindActionPerformed
+        Date dateStart = this.dateStart.getDate();
+        Date dateEnd = this.dateEnd.getDate();
+        if (dateStart == null || dateEnd == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày bắt đầu và ngày kết thúc !");
+        } else {
+            // Gọi phương thức showLineChart() với tham số là ngày bắt đầu và kết thúc đã
+            // chọn
+            showLineChart(dateStart, dateEnd);
+        }
+    }// GEN-LAST:event_btnFindActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable ThietBiTable;
+    private javax.swing.JButton btnFind1;
+    private javax.swing.JButton btnSearch;
+    private com.toedter.calendar.JDateChooser dateEnd;
+    private com.toedter.calendar.JDateChooser dateStart;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox3;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
+    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel pnThanhVien;
+    private javax.swing.JPanel pnThanhVien1;
     private javax.swing.JPanel pnXuLy;
     private javax.swing.JTable tableXuLy;
+    private javax.swing.JComboBox<String> tentbcbb;
+    private javax.swing.JTextField txtTongTienPhat;
     // End of variables declaration//GEN-END:variables
 }

@@ -24,6 +24,7 @@ public class HomeGUI extends javax.swing.JFrame {
      * Creates new form HomeGUI2
      */
     public HomeGUI() throws SQLException {
+        
         initComponents();
         setLocationRelativeTo(null);
         panelShow.setLayout(new CardLayout());
@@ -40,10 +41,10 @@ public class HomeGUI extends javax.swing.JFrame {
         pnThietBi.add(thietBi, BorderLayout.CENTER);
 
         //panel ket qua
-        JPanel pnXuLy = new JPanel();
-        PanelXuLy xuLy = new PanelXuLy();
-        pnXuLy.setLayout(new BorderLayout());
-        pnXuLy.add(xuLy, BorderLayout.CENTER);
+//        JPanel pnXuLy = new JPanel();
+//        PanelXuLy xuLy = new PanelXuLy();
+//        pnXuLy.setLayout(new BorderLayout());
+//        pnXuLy.add(xuLy, BorderLayout.CENTER);
 
         //panel thong ke
         JPanel pnThongKe = new JPanel();
@@ -54,7 +55,7 @@ public class HomeGUI extends javax.swing.JFrame {
         //
         panelShow.add(pnTV, "thanhVien");
         panelShow.add(pnThietBi, "thietBi");
-        panelShow.add(pnXuLy, "xuLy");
+//        panelShow.add(pnXuLy, "xuLy");
         panelShow.add(pnThongKe, "thongKe");
 
     }
@@ -138,7 +139,7 @@ public class HomeGUI extends javax.swing.JFrame {
 
         btnThietBi.setBackground(new java.awt.Color(204, 204, 204));
         btnThietBi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnThietBi.setText("THiẾT BỊ");
+        btnThietBi.setText("THIẾT BỊ");
         btnThietBi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnThietBiActionPerformed(evt);
@@ -206,7 +207,7 @@ public class HomeGUI extends javax.swing.JFrame {
         panelShow.setLayout(panelShowLayout);
         panelShowLayout.setHorizontalGroup(
             panelShowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1026, Short.MAX_VALUE)
+            .addGap(0, 1152, Short.MAX_VALUE)
         );
         panelShowLayout.setVerticalGroup(
             panelShowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,9 +220,9 @@ public class HomeGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelShow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(138, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelShow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

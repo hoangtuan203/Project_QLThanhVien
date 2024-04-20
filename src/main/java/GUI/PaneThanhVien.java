@@ -5,7 +5,9 @@
 package GUI;
 
 import BUS.thanhvienBUS;
+import BUS.thongtinsdBUS;
 import DAL.thanhvien;
+import DAL.thongtinsd;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,9 +15,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +35,11 @@ import javax.swing.table.DefaultTableModel;
  * @author ASUS
  */
 public class PaneThanhVien extends javax.swing.JPanel {
+    private static final String CHARACTERS = "0123456789";
+    private static final int KEY_LENGTH = 8;
     boolean check = false;
     thanhvienBUS tvBUS = new thanhvienBUS();
+    thongtinsdBUS ttsdBUS = new thongtinsdBUS();
     private List<Date> thoiDiemVaoKhuList = new ArrayList<>();
     DefaultTableModel model ;
     
@@ -72,6 +80,15 @@ public class PaneThanhVien extends javax.swing.JPanel {
             
                 
             }));
+         btnMuon.addActionListener(((e) -> {
+                
+            try {
+                btnMuon_Click();
+            } catch (SQLException ex) {
+                Logger.getLogger(PaneThanhVien.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+            }));
          btnXoaTheoNamKH.addActionListener(((e) -> {
                 
             try {
@@ -97,6 +114,11 @@ public class PaneThanhVien extends javax.swing.JPanel {
                 
             }));
 //        docThoiDiemTuTep();
+           btnTra.addActionListener(((e) -> {
+                
+                tra();
+                
+            }));
             btnVao.addActionListener(((e) -> {
                 
                 vao();
@@ -111,6 +133,7 @@ public class PaneThanhVien extends javax.swing.JPanel {
             }
                 
             }));
+
     }
 
     /**
@@ -123,12 +146,12 @@ public class PaneThanhVien extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        tfHoTen = new javax.swing.JTextField();
+        tfSDT = new javax.swing.JTextField();
+        tfKhoa = new javax.swing.JTextField();
+        tfNganh = new javax.swing.JTextField();
         tfMaTV = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
+        tfEmail = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -154,17 +177,17 @@ public class PaneThanhVien extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel2.setText("Mã Thành Viên");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tfHoTen.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tfSDT.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tfKhoa.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tfNganh.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         tfMaTV.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jTextField8.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        tfEmail.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel9.setText("Email");
@@ -292,11 +315,11 @@ public class PaneThanhVien extends javax.swing.JPanel {
                                 .addGap(38, 38, 38)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(tfMaTV)
-                                    .addComponent(jTextField2)
-                                    .addComponent(jTextField4)
-                                    .addComponent(jTextField8)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(tfHoTen)
+                                    .addComponent(tfSDT)
+                                    .addComponent(tfEmail)
+                                    .addComponent(tfKhoa)
+                                    .addComponent(tfNganh, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jLabel8))
                         .addGap(54, 54, 54)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,13 +350,13 @@ public class PaneThanhVien extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfHoTen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(tfSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -342,32 +365,31 @@ public class PaneThanhVien extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfKhoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tfNganh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
 
     private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnThemActionPerformed
 
-    public List<Date> getThoiDiemVaoKhuList() {
-        // Xóa các thời điểm hiện tại trong danh sách để tránh lặp lại khi gọi phương thức này nhiều lần
-        thoiDiemVaoKhuList.clear();
+
+
 
         // Đọc thời điểm từ tệp tin và thêm vào danh sách
         // docThoiDiemTuTep();
 
-        return thoiDiemVaoKhuList;
-    }
+    
     public void listThanhVien() throws SQLException {
         List list = thanhvienBUS.getAll();
         model = convertThanhVien(list);
@@ -399,6 +421,10 @@ public class PaneThanhVien extends javax.swing.JPanel {
         FormNhapKhoaCanXoa formNhapKhoaCanXoa = new FormNhapKhoaCanXoa();
         formNhapKhoaCanXoa.setVisible(true);
     }
+    public void btnMuon_Click() throws SQLException{
+        FormMuon formMuon = new FormMuon();
+        formMuon.setVisible(true);
+    }
     public void btnNhapExcel_Click() throws SQLException{
         JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -416,6 +442,18 @@ public class PaneThanhVien extends javax.swing.JPanel {
         PanelThemThanhVien panelThemThanhVien = new PanelThemThanhVien(1,t);
         panelThemThanhVien.setVisible(true);
     }
+    public  String generateRandomKey() {
+        SecureRandom secureRandom = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder(KEY_LENGTH);
+
+        for (int i = 0; i < KEY_LENGTH; i++) {
+            int randomIndex = secureRandom.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+
+        return stringBuilder.toString();
+    }
     public void vao(){
         if(tfMaTV.getText().isEmpty())
             JOptionPane.showMessageDialog(null, "Vui lòng nhập mã thành viên!");
@@ -423,14 +461,34 @@ public class PaneThanhVien extends javax.swing.JPanel {
         else if( tvBUS.checkThanhVien(Integer.parseInt(tfMaTV.getText())) == false)
             JOptionPane.showMessageDialog(null, "Bạn chưa là thành viên!");
         else if(tvBUS.checkThanhVien(Integer.parseInt(tfMaTV.getText())) == true) {
+            LocalDateTime currentTime = LocalDateTime.now();
+        
+        Timestamp timestamp = Timestamp.valueOf(currentTime);
+        
+             
+             int maTTSD = Integer.parseInt(generateRandomKey());
+             int maTV = Integer.parseInt(tfMaTV.getText());
+            thongtinsd ttsd = new thongtinsd(maTTSD, maTV, timestamp, null, null,null);
+            ttsdBUS.add(ttsd);
+            
+            thanhvien t=  tvBUS.getThanhVienByMaTV(maTV);
+            tfHoTen.setText(t.getHoTen());
+            tfEmail.setText(t.getEmail());
+            tfKhoa.setText(t.getKhoa());
+            tfNganh.setText(t.getNganh());
+            tfSDT.setText(t.getSdt()+"");
             
             JOptionPane.showMessageDialog(null, "Vào khu tự học thành công!");
             //insert table thongtinsd
-            if(tvBUS.checkViPham(Integer.parseInt(tfMaTV.getText())))
+            if(tvBUS.checkViPham(maTV))
                 lbViPham.setText("Vi phạm");
             else
                 lbViPham.setText("Không vi phạm");
         }
+    }
+    public void tra(){
+             FormTra formTra = new FormTra();
+        formTra.setVisible(true);
     }
     public boolean delete() throws SQLException{
      boolean check = false ;
@@ -463,6 +521,7 @@ public class PaneThanhVien extends javax.swing.JPanel {
     //     }
     // }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnMuon;
     private javax.swing.JButton btnNhapExcel;
@@ -482,14 +541,14 @@ public class PaneThanhVien extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel lbViPham;
     private javax.swing.JTable tblThanhVien;
+    private javax.swing.JTextField tfEmail;
+    private javax.swing.JTextField tfHoTen;
+    private javax.swing.JTextField tfKhoa;
     private javax.swing.JTextField tfMaTV;
+    private javax.swing.JTextField tfNganh;
+    private javax.swing.JTextField tfSDT;
     // End of variables declaration//GEN-END:variables
 
     private void log(Level SEVERE, Object object, SQLException ex) {

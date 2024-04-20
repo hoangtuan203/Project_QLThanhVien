@@ -6,10 +6,23 @@ package GUI;
 
 import BUS.thietbiBUS;
 import DAL.thietbi;
-import DAL.thietbiDAL;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import static javax.management.Query.lt;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.compress.archivers.dump.InvalidFormatException;
+import static org.apache.commons.math3.fitting.leastsquares.LeastSquaresFactory.model;
+import org.apache.poi.EncryptedDocumentException;
+import static org.hibernate.criterion.Restrictions.lt;
+import static org.hibernate.criterion.Subqueries.lt;
 
 /**
  *
@@ -22,22 +35,7 @@ public class PaneThietBi extends javax.swing.JPanel {
      */
     public PaneThietBi() {
         initComponents();
-        displaytablethietbi();
-    }
-
-    public void displaytablethietbi() {
-        List<thietbi> display = thietbiBUS.getAllDevice();
-        DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
-        model.setRowCount(0);
-        int stt = 1;
-        for (thietbi i : display) {
-            Object[] row = {
-                stt++,
-                i.getMaTB(),
-                i.getTenTB(),
-                i.getMoTaTB(),};
-            model.addRow(row);
-        }
+        displayTableDevice();
     }
 
     /**
@@ -53,26 +51,26 @@ public class PaneThietBi extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableDevice = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        btnAdd = new java.awt.Button();
-        btnUpdate = new java.awt.Button();
-        btnDelete = new java.awt.Button();
-        jcbAll = new javax.swing.JCheckBox();
-        jcbBorrowed = new javax.swing.JCheckBox();
-        jcbEmpty = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
-        btnImportExcel = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         jtfSearch = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jcbBorrowed = new javax.swing.JCheckBox();
         jtfName = new javax.swing.JTextField();
+        jcbAll = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
         jtfDescription = new javax.swing.JTextField();
-        jcbStatus = new javax.swing.JComboBox<>();
-        btnReload = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        btnDelete = new java.awt.Button();
+        btnAdd = new java.awt.Button();
+        btnUpdate = new java.awt.Button();
+        jcbEmpty = new javax.swing.JCheckBox();
+        btnReload = new java.awt.Button();
+        btnImportExcel = new java.awt.Button();
 
         jMenu1.setText("jMenu1");
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.setName(""); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1151, 733));
 
         jTableDevice.setModel(new javax.swing.table.DefaultTableModel(
@@ -88,11 +86,54 @@ public class PaneThietBi extends javax.swing.JPanel {
         ));
         jTableDevice.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         jTableDevice.setShowGrid(true);
+        jTableDevice.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableDeviceMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableDevice);
 
+        btnSearch.setText("Tìm kiếm");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+
+        jcbBorrowed.setText("Đang được mượn");
+        jcbBorrowed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbBorrowedActionPerformed(evt);
+            }
+        });
+
+        jtfName.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jtfName.setDoubleBuffered(true);
+        jtfName.setDragEnabled(true);
+        jtfName.setFocusTraversalPolicyProvider(true);
+
+        jcbAll.setText("All");
+        jcbAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbAllActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Tên thiết bị :");
 
-        jLabel2.setText("Trạng thái: ");
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Mô tả: ");
+
+        btnDelete.setActionCommand("Xóa");
+        btnDelete.setLabel("Xóa");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnAdd.setActionCommand("Thêm");
         btnAdd.setLabel("Thêm");
@@ -110,144 +151,131 @@ public class PaneThietBi extends javax.swing.JPanel {
             }
         });
 
-        btnDelete.setActionCommand("Xóa");
-        btnDelete.setLabel("Xóa");
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
-            }
-        });
-
-        jcbAll.setText("All");
-        jcbAll.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jcbAllActionPerformed(evt);
-            }
-        });
-
-        jcbBorrowed.setText("Đang được mượn");
-
         jcbEmpty.setText("Đang trống");
-
-        jLabel3.setText("Mô tả: ");
-
-        btnImportExcel.setText("Nhập Excel");
-        btnImportExcel.addActionListener(new java.awt.event.ActionListener() {
+        jcbEmpty.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnImportExcelActionPerformed(evt);
+                jcbEmptyActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Tìm kiếm: ");
-
-        btnSearch.setText("Tìm");
-        btnSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSearchActionPerformed(evt);
-            }
-        });
-
-        jcbStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Đang được mượn", "Đang trống", " ", " " }));
-
-        btnReload.setText("Tải lại");
+        btnReload.setActionCommand("Tải lại");
+        btnReload.setLabel("Tải lại");
         btnReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnReloadActionPerformed(evt);
             }
         });
 
+        btnImportExcel.setLabel("Nhập Excel");
+        btnImportExcel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImportExcelActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(jcbAll)
+                        .addGap(34, 34, 34)
+                        .addComponent(jcbBorrowed))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel3)
+                                .addGap(37, 37, 37)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jtfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel1))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jcbEmpty)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(89, 89, 89)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(42, 42, 42)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnReload, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(44, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnImportExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(109, 109, 109))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jcbEmpty)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jcbAll)
+                        .addComponent(jcbBorrowed)))
+                .addGap(25, 25, 25)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jtfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                            .addComponent(btnReload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnImportExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jLabel4)
-                        .addGap(38, 38, 38)
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1087, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(157, 157, 157)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(jtfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(166, 166, 166)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jcbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(84, 84, 84)
-                                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addGap(26, 26, 26)
-                                        .addComponent(jtfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(63, 63, 63)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(73, 73, 73)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnImportExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(291, 291, 291)
-                        .addComponent(jcbAll)
-                        .addGap(34, 34, 34)
-                        .addComponent(jcbBorrowed)
-                        .addGap(18, 18, 18)
-                        .addComponent(jcbEmpty)))
-                .addGap(119, 191, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4))
-                    .addComponent(jtfSearch, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jcbAll)
-                    .addComponent(jcbBorrowed)
-                    .addComponent(jcbEmpty))
-                .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(jtfName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(53, 53, 53)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jtfDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3))
-                            .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnImportExcel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(44, 44, 44)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jcbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(6, 6, 6))
-                            .addComponent(btnDelete, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnReload, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -256,33 +284,42 @@ public class PaneThietBi extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1050, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 749, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 687, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        String name = (String) jtfName.getText();
-        String des = (String) jtfDescription.getText();
-        int maTB = thietbiBUS.getIdDevice();
-        thietbi tb = new thietbi(maTB, name, des);
+        String name = jtfName.getText().trim();
+        String des = jtfDescription.getText().trim();
 
-        List<thietbi> allDevice = thietbiBUS.getAllDevice();
+        if (name.isEmpty() || des.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
+        } else {
+            int maTB = thietbiBUS.getIdDevice();
+            thietbi tb = new thietbi(maTB, name, des);
 
-        if (!allDevice.contains(tb)) {
-            thietbiBUS.addDevice(tb);
-            JOptionPane.showMessageDialog(this, "Thêm thiết bị thành công");
-            displaytablethietbi();
+            List<thietbi> allDevice = thietbiBUS.getAllDevice();
+
+            if (!allDevice.contains(tb)) {
+                thietbiBUS.addDevice(tb);
+                JOptionPane.showMessageDialog(this, "Thêm thiết bị thành công");
+                jtfName.setText(null);
+                jtfDescription.setText(null);
+                displayTableDevice();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thiết bị đã tồn tại trong danh sách");
+            }
         }
-    }//GEN-LAST:event_btnAddActionPerformed
 
-    private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExcelActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnImportExcelActionPerformed
+    }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int[] selectedRows = jTableDevice.getSelectedRows();
@@ -291,19 +328,35 @@ public class PaneThietBi extends javax.swing.JPanel {
             int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa " + selectedRows.length + " thiết bị?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
+                boolean hasBorrowedDevices = false;
+
+                List<thietbi> borrowedDevices = thietbiBUS.getDevicesByBorrowDateAndReturnDate();
+
                 for (int i = selectedRows.length - 1; i >= 0; i--) {
                     int selectedRow = selectedRows[i];
                     int MaTB = Integer.parseInt(jTableDevice.getValueAt(selectedRow, 1).toString());
                     String TenTB = jTableDevice.getValueAt(selectedRow, 2).toString();
                     String MoTa = jTableDevice.getValueAt(selectedRow, 3).toString();
 
-                    thietbi tb = new thietbi(MaTB, TenTB, MoTa);
-                    thietbiBUS.deleteDevice(tb);
+                    for (thietbi borrowedDevice : borrowedDevices) {
+                        if (borrowedDevice.getMaTB() == MaTB) {
+                            hasBorrowedDevices = true;
+                            break;
+                        }
+                    }
+
+                    if (hasBorrowedDevices) {
+                        JOptionPane.showMessageDialog(this, "Không thể xóa thiết bị đang được mượn");
+                    } else {
+                        thietbi tb = new thietbi(MaTB, TenTB, MoTa);
+                        thietbiBUS.deleteDevice(tb);
+                    }
                 }
 
-                JOptionPane.showMessageDialog(this, "Xóa " + selectedRows.length + " thiết bị thành công");
-
-                displaytablethietbi();
+                if (!hasBorrowedDevices) {
+                    JOptionPane.showMessageDialog(this, "Xóa " + selectedRows.length + " thiết bị thành công");
+                    displayTableDevice();
+                }
             }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn ít nhất một đối tượng xóa trên bảng");
@@ -314,100 +367,235 @@ public class PaneThietBi extends javax.swing.JPanel {
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
         int selectedRow = jTableDevice.getSelectedRow();
         if (selectedRow >= 0) {
-            String name = jtfName.getText();
-            String description = jtfDescription.getText();
             int selectedDeviceID = (int) jTableDevice.getValueAt(selectedRow, 1);
+            String nameDevice = jtfName.getText().trim();
+            String descriptionDevice = jtfDescription.getText().trim();
 
-            thietbi updatedDevice = new thietbi(selectedDeviceID, name, description);
+            if (nameDevice.isEmpty() || descriptionDevice.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
+            } else {
+                thietbi tb = new thietbi(selectedDeviceID, nameDevice, descriptionDevice);
 
-            thietbiBUS.updateDevice(updatedDevice);
+                thietbiBUS.updateDevice(tb);
 
-            JOptionPane.showMessageDialog(this, "Sửa thiết bị thành công");
-            displaytablethietbi();
+                JOptionPane.showMessageDialog(this, "Sửa thiết bị thành công");
+
+                jtfName.setText(null);
+                jtfDescription.setText(null);
+                displayTableDevice();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn thiết bị cần cập nhật");
         }
+
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         String keyword = jtfSearch.getText().trim();
 
         if (keyword.isEmpty()) {
-            displaytablethietbi();
+            displayTableDevice();
         } else {
-            List<thietbi> danhsachthietbi;
+            List<thietbi> dsthietbi;
 
             try {
                 int keywordInt = Integer.parseInt(keyword);
-                danhsachthietbi = thietbiBUS.getListByDeviceID(keywordInt);
+                dsthietbi = thietbiBUS.getListByDeviceID(keywordInt);
             } catch (NumberFormatException e) {
-                danhsachthietbi = thietbiBUS.getListByDeviceName(keyword);
+                dsthietbi = thietbiBUS.getListByDeviceName(keyword);
+                dsthietbi = thietbiBUS.getListByDeviceDescription(keyword);
             }
 
-            displaySearchResult(danhsachthietbi);
+            displaySearchResult(dsthietbi);
         }
     }//GEN-LAST:event_btnSearchActionPerformed
-
-    private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
-        displaytablethietbi();
-        jtfName.setText(null);
-        jtfDescription.setText(null);
-        jtfSearch.setText(null);
-
-    }//GEN-LAST:event_btnReloadActionPerformed
 
     private void jcbAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbAllActionPerformed
         boolean selectAll = jcbAll.isSelected();
         jcbAll.setSelected(selectAll);
 
-        if (selectAll) {
-            if (jTableDevice.getRowCount() > 0) {
-                for (int i = 0; i < jTableDevice.getRowCount(); i++) {
-                    jTableDevice.changeSelection(i, 0, true, false);
-                }
-            }
-        } else {
-            if (jTableDevice.getRowCount() > 0) {
-                for (int i = 0; i < jTableDevice.getRowCount(); i++) {
-                    jTableDevice.changeSelection(i, 0, false, false);
-                }
+        int rowCount = jTableDevice.getRowCount();
+        if (rowCount > 0) {
+            for (int i = 0; i < rowCount; i++) {
+                jTableDevice.changeSelection(i, 0, selectAll, false);
             }
         }
     }//GEN-LAST:event_jcbAllActionPerformed
 
-    private void displaySearchResult(List<thietbi> thietBi) {
+    private void jTableDeviceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDeviceMouseClicked
+        int selectedRow = jTableDevice.getSelectedRow();
+
+        if (selectedRow >= 0) {
+            String name = jTableDevice.getValueAt(selectedRow, 2).toString();
+            String description = jTableDevice.getValueAt(selectedRow, 3).toString();
+
+            jtfName.setText(name);
+            jtfDescription.setText(description);
+        }
+    }//GEN-LAST:event_jTableDeviceMouseClicked
+
+    private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
+        displayTableDevice();
+        jtfName.setText(null);
+        jtfDescription.setText(null);
+        jtfSearch.setText(null);
+        jcbAll.setSelected(false);
+        jcbBorrowed.setSelected(false);
+        jcbEmpty.setSelected(false);
+    }//GEN-LAST:event_btnReloadActionPerformed
+
+    private void btnImportExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportExcelActionPerformed
+        JFileChooser excelFileChooser = new JFileChooser();
+        excelFileChooser.setDialogTitle("Chọn tệp Excel");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
+        excelFileChooser.setFileFilter(fnef);
+        int excelChooser = excelFileChooser.showOpenDialog(null);
+
+        if (excelChooser == JFileChooser.APPROVE_OPTION) {
+            File excelFile = excelFileChooser.getSelectedFile();
+            thietbiBUS.importExcelToDatabase(excelFile);
+            JOptionPane.showMessageDialog(null, "Nhập danh sách thiết bị thành công");
+            displayTableDevice();
+        }
+    }//GEN-LAST:event_btnImportExcelActionPerformed
+
+    private void jcbBorrowedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbBorrowedActionPerformed
+        List<thietbi> allDevices = thietbiBUS.getAllDevice();
+        List<thietbi> borrowedDevices = thietbiBUS.getDevicesByBorrowDateAndReturnDate();
+
         DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
         model.setRowCount(0);
         int stt = 1;
-        for (thietbi tb : thietBi) {
+
+        boolean showBorrowedOnly = jcbBorrowed.isSelected();
+
+        for (thietbi device : allDevices) {
+            boolean isBorrowed = false;
+
+            for (thietbi borrowedDevice : borrowedDevices) {
+                if (device.getMaTB() == borrowedDevice.getMaTB()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+            if (!showBorrowedOnly || (showBorrowedOnly && isBorrowed)) {
+                String status = isBorrowed ? "Đang được mượn" : "Đang trống";
+
+                Object[] row = {
+                    stt++,
+                    device.getMaTB(),
+                    device.getTenTB(),
+                    device.getMoTaTB(),
+                    status
+                };
+                model.addRow(row);
+            }
+        }
+    }//GEN-LAST:event_jcbBorrowedActionPerformed
+
+    private void jcbEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbEmptyActionPerformed
+        List<thietbi> allDevices = thietbiBUS.getAllDevice();
+        List<thietbi> borrowedDevices = thietbiBUS.getDevicesByBorrowDateAndReturnDate();
+
+        DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+
+        boolean showAvailableOnly = jcbEmpty.isSelected();
+
+        for (thietbi device : allDevices) {
+            boolean isAvailable = true;
+
+            for (thietbi borrowedDevice : borrowedDevices) {
+                if (device.getMaTB() == borrowedDevice.getMaTB()) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (!showAvailableOnly || (showAvailableOnly && isAvailable)) {
+                String status = isAvailable ? "Đang trống" : "Đang được mượn";
+
+                Object[] row = {
+                    stt++,
+                    device.getMaTB(),
+                    device.getTenTB(),
+                    device.getMoTaTB(),
+                    status
+                };
+                model.addRow(row);
+            }
+        }
+    }//GEN-LAST:event_jcbEmptyActionPerformed
+
+    public void displayTableDevice() {
+        List<thietbi> display = thietbiBUS.getAllDevice();
+        DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
+        model.setRowCount(0);
+        int stt = 1;
+        for (thietbi i : display) {
+            boolean isBorrowed = false;
+            for (thietbi device : thietbiBUS.getDevicesByBorrowDateAndReturnDate()) {
+                if (device.getMaTB() == i.getMaTB()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+            String status = isBorrowed ? "Đang được mượn" : "Đang trống";
+
             Object[] row = {
                 stt++,
-                tb.getMaTB(),
-                tb.getTenTB(),
-                tb.getMoTaTB(),};
+                i.getMaTB(),
+                i.getTenTB(),
+                i.getMoTaTB(),
+                status
+            };
             model.addRow(row);
         }
     }
 
+    private void displaySearchResult(List<thietbi> thietBi) {
+        DefaultTableModel model = (DefaultTableModel) jTableDevice.getModel();
+        model.setRowCount(0);
+        for (thietbi tb : thietBi) {
+            boolean isBorrowed = false;
+            for (thietbi device : thietbiBUS.getDevicesByBorrowDateAndReturnDate()) {
+                if (device.getMaTB() == tb.getMaTB()) {
+                    isBorrowed = true;
+                    break;
+                }
+            }
+            String status = isBorrowed ? "Đang được mượn" : "Đang trống";
+
+            Object[] row = {
+                model.getRowCount() + 1,
+                tb.getMaTB(),
+                tb.getTenTB(),
+                tb.getMoTaTB(),
+                status
+            };
+            model.addRow(row);
+        }
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button btnAdd;
     private java.awt.Button btnDelete;
-    private javax.swing.JButton btnImportExcel;
-    private javax.swing.JButton btnReload;
+    private java.awt.Button btnImportExcel;
+    private java.awt.Button btnReload;
     private javax.swing.JButton btnSearch;
     private java.awt.Button btnUpdate;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableDevice;
     private javax.swing.JCheckBox jcbAll;
     private javax.swing.JCheckBox jcbBorrowed;
     private javax.swing.JCheckBox jcbEmpty;
-    private javax.swing.JComboBox<String> jcbStatus;
     private javax.swing.JTextField jtfDescription;
     private javax.swing.JTextField jtfName;
     private javax.swing.JTextField jtfSearch;

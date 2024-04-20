@@ -4,9 +4,12 @@
  */
 package GUI;
 
+import BUS.xulyBUS;
 import DAL.thongtinsd;
 import DAL.xuly;
 import DAL.xulyDAL;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.time.LocalDate;
@@ -29,6 +32,8 @@ public class addxuly extends javax.swing.JDialog {
         initComponents();
         filltvvipham();
         numberonly();
+        addcbxgetItem();
+        txtsotienadd.setEditable(false);
     }
 
     /**
@@ -43,13 +48,13 @@ public class addxuly extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         label1 = new java.awt.Label();
         jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         button1 = new java.awt.Button();
         button2 = new java.awt.Button();
         cbxnmatv = new javax.swing.JComboBox<>();
-        txthinhthuc = new javax.swing.JTextField();
-        txtsotien = new javax.swing.JTextField();
+        txtsotienadd = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        cbxhinhthucadd = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -59,9 +64,6 @@ public class addxuly extends javax.swing.JDialog {
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Mã thành viên :");
-
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Hình thức xử lí :");
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Số tiền :");
@@ -86,27 +88,21 @@ public class addxuly extends javax.swing.JDialog {
             }
         });
 
-        txthinhthuc.addActionListener(new java.awt.event.ActionListener() {
+        txtsotienadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txthinhthucActionPerformed(evt);
+                txtsotienaddActionPerformed(evt);
             }
         });
-        txthinhthuc.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtsotienadd.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txthinhthucKeyTyped(evt);
+                txtsotienaddKeyTyped(evt);
             }
         });
 
-        txtsotien.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtsotienActionPerformed(evt);
-            }
-        });
-        txtsotien.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtsotienKeyTyped(evt);
-            }
-        });
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("Hình thức xử lí :");
+
+        cbxhinhthucadd.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Khóa thẻ 1 thàng", "Khóa thẻ 2 tháng", "Bồi thường" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -117,20 +113,20 @@ public class addxuly extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtsotien)
-                            .addComponent(txthinhthuc)
-                            .addComponent(cbxnmatv, 0, 210, Short.MAX_VALUE)))
+                            .addComponent(cbxnmatv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbxhinhthucadd, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtsotienadd, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(79, 79, 79)
+                        .addGap(59, 59, 59)
                         .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(65, 65, 65)
-                        .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(76, 76, 76)
+                        .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -142,19 +138,19 @@ public class addxuly extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbxnmatv, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(32, 32, 32)
+                .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txthinhthuc, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxhinhthucadd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsotien, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(55, 55, 55)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(button1, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(button2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(txtsotienadd, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(48, 48, 48)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(button2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -162,14 +158,13 @@ public class addxuly extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 414, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -178,71 +173,100 @@ public class addxuly extends javax.swing.JDialog {
     private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
         dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_button2ActionPerformed
-
-    private void txthinhthucKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txthinhthucKeyTyped
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txthinhthucKeyTyped
-    public void numberonly()
-    {
-       txtsotien.addKeyListener(new KeyListener() {
-    @Override
-    public void keyTyped(KeyEvent e) {
-        char c = e.getKeyChar();
-        if (!((c >= '0' && c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
-            e.consume();
-             JOptionPane.showMessageDialog(null, "Chỉ được nhập số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // Không cần thực hiện hành động gì trong phương thức này
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        // Không cần thực hiện hành động gì trong phương thức này
-    }
-});
-
+    public void numberonly() {
+        txtsotienadd.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+                    e.consume();
+                    JOptionPane.showMessageDialog(null, "Chỉ được nhập số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
-    private void txthinhthucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txthinhthucActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txthinhthucActionPerformed
+            }
 
-    private void txtsotienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsotienActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtsotienActionPerformed
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // Không cần thực hiện hành động gì trong phương thức này
+            }
 
-    private void txtsotienKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsotienKeyTyped
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // Không cần thực hiện hành động gì trong phương thức này
+            }
+        });
+
+    }
+
+    private void addcbxgetItem() {
+        cbxhinhthucadd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedOption = (String) cbxhinhthucadd.getSelectedItem();
+                if (selectedOption.equals("Bồi thường")) {
+                    txtsotienadd.setEditable(true); // Cho phép chỉnh sửa TextField khi chọn Option 3
+                } else {
+                    txtsotienadd.setEditable(false); // Ngăn chặn chỉnh sửa TextField khi chọn các Option khác
+                }
+            }
+        });
+
+    }
+
+    private void txtsotienaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsotienaddActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtsotienKeyTyped
+    }//GEN-LAST:event_txtsotienaddActionPerformed
+
+    private void txtsotienaddKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsotienaddKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtsotienaddKeyTyped
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-        xulyDAL addxuly= new xulyDAL();
+        xulyBUS addxuly = new xulyBUS();
         String selectedOptionStr = (String) cbxnmatv.getSelectedItem(); // Lấy phần tử đã chọn từ combobox dưới dạng chuỗi
-int selectedOption = Integer.parseInt(selectedOptionStr);
-        String hinhthuc= txthinhthuc.getText();
-        int sotien = Integer.parseInt(txtsotien.getText());
+        int selectedOption = Integer.parseInt(selectedOptionStr);
+//        String hinhthuc = txthinhthuc.getText();
+        String hinhthuc = (String) cbxhinhthucadd.getSelectedItem();
         Date today = new Date(System.currentTimeMillis());
-        xuly xulyadd= new xuly(0,selectedOption,hinhthuc,sotien,today,1);
-//                System.out.println(toString(xulyadd));
-        addxuly.add(xulyadd);
+        Integer sotien = null;
+        if (!hinhthuc.equals("Bồi thường")) {
+            txtsotienadd.setEditable(false);
+            xuly xulyadd = new xuly(0, selectedOption, hinhthuc, sotien, today, 1);
+        } else {
+            if (!(txtsotienadd.getText()).isEmpty()) {
+                sotien = Integer.valueOf(txtsotienadd.getText());
+                xuly xulyadd = new xuly(0, selectedOption, hinhthuc, sotien, today, 1);
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền cần bồi thường");
+                return;
+            }
+
+        }
+        xuly xulyadd = new xuly(0, selectedOption, hinhthuc, null, today, 1);
+//                System.out.println(toString(xulyadd));                        
+        if (addxuly.addXL(xulyadd)) {
+            System.out.println("theem thanh comng");
+        } else {
+            System.out.println("thaa bai");
+        }
         dispose();
     }//GEN-LAST:event_button1ActionPerformed
 
     private void cbxnmatvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxnmatvActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxnmatvActionPerformed
-    private void filltvvipham()
-    {
-        List<thongtinsd> dstv=  xulyDAL.selectalltv();
-        for (thongtinsd matv: dstv) {
-            cbxnmatv.addItem(matv.getMaTV()+"");
-        }
+    private void filltvvipham() {
+
+        List<Integer> dstv = xulyBUS.selecttvxl();
         
+    
+        for (Integer matv : dstv) {
+           
+                cbxnmatv.addItem(matv +"");
+            
+
+        }
+
     }
-   
+
     /**
      * @param args the command line arguments
      */
@@ -288,13 +312,13 @@ int selectedOption = Integer.parseInt(selectedOptionStr);
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button button1;
     private java.awt.Button button2;
+    private javax.swing.JComboBox<String> cbxhinhthucadd;
     private javax.swing.JComboBox<String> cbxnmatv;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private java.awt.Label label1;
-    private javax.swing.JTextField txthinhthuc;
-    private javax.swing.JTextField txtsotien;
+    private javax.swing.JTextField txtsotienadd;
     // End of variables declaration//GEN-END:variables
 }

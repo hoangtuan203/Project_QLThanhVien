@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package GUI;
 
+import BUS.xulyBUS;
 import DAL.xuly;
 import DAL.xulyDAL;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
@@ -20,6 +17,28 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import GUI.addxuly;
+
+import DAL.xuly;
+
+import DAL.xuly;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import static java.time.temporal.TemporalQueries.localDate;
+import java.util.Calendar;
+
+import java.util.List;
+import java.util.TimerTask;
+import javax.swing.Timer;
+
+import javax.swing.event.ListSelectionEvent;
+import static jdk.vm.ci.common.InitTimer.timer;
+
 /**
  *
  * @author ASUS
@@ -33,13 +52,16 @@ public class PanelXuLy extends javax.swing.JPanel {
         initComponents();
         displaytablexuly();
         addTableSelectionListener();
-        // Đặt sự kiện cho checkBox1
+        addcbxgetItem();
         addchecke0SelectionListener();
-
+        txtmatv.setEditable(false);
+        numberonly();
+        searchkeyword();
     }
 
     public void displaytablexuly() {
-        List<xuly> display = xulyDAL.selectAll();
+        Previousupdateshown();
+        List<xuly> display = xulyBUS.selectAll();
         DefaultTableModel model = (DefaultTableModel) tablexuly.getModel();
         model.setRowCount(0);
         int stt = 1;
@@ -69,25 +91,24 @@ public class PanelXuLy extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tablexuly = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        button1 = new java.awt.Button();
+        txtsearch = new javax.swing.JTextField();
+        btnsearch = new java.awt.Button();
         jPanel1 = new javax.swing.JPanel();
         button5 = new java.awt.Button();
         button7 = new java.awt.Button();
         button8 = new java.awt.Button();
+        button6 = new java.awt.Button();
         txtmatv = new javax.swing.JTextField();
-        txtsotien = new javax.swing.JTextField();
-        txthinhthuc = new javax.swing.JTextField();
         txtngay = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         cbox0 = new javax.swing.JCheckBox();
         cbox1 = new javax.swing.JCheckBox();
-        txtsotien1 = new javax.swing.JTextField();
+        txtsotien = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
+        cbxhinhthucxl = new javax.swing.JComboBox<>();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -106,10 +127,10 @@ public class PanelXuLy extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tablexuly);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 1141, 309));
-        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(774, 19, 280, 35));
+        add(txtsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(774, 19, 280, 35));
 
-        button1.setLabel("Tìm kiếm");
-        add(button1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1064, 19, 80, 35));
+        btnsearch.setLabel("Tìm kiếm");
+        add(btnsearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(1064, 19, 80, 35));
 
         button5.setLabel("Xóa");
         button5.addActionListener(new java.awt.event.ActionListener() {
@@ -132,18 +153,27 @@ public class PanelXuLy extends javax.swing.JPanel {
             }
         });
 
+        button6.setLabel("Reset");
+        button6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(115, 115, 115)
+                .addGap(57, 57, 57)
                 .addComponent(button7, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(188, 188, 188)
+                .addGap(125, 125, 125)
                 .addComponent(button8, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(124, 124, 124)
                 .addComponent(button5, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(139, 139, 139))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
+                .addComponent(button6, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,23 +182,18 @@ public class PanelXuLy extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(button5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(button7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                    .addComponent(button8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                    .addComponent(button8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                    .addComponent(button6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 673, 1141, 60));
-        add(txtmatv, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 440, 240, 40));
-        add(txtsotien, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 520, 240, 40));
-        add(txthinhthuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 440, 230, 40));
+        add(txtmatv, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 450, 230, 40));
         add(txtngay, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 520, 230, 40));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel12.setText("Mã thành viên :");
-        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 440, 140, 40));
-
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel13.setText("Số tiền : ");
-        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, 140, 40));
+        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 450, 130, 40));
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel14.setText("Hình thức xử lí :");
@@ -180,18 +205,27 @@ public class PanelXuLy extends javax.swing.JPanel {
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel16.setText("Trạng thái :");
-        add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 590, 90, 40));
+        add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 590, 90, 40));
 
         cbox0.setText("0");
-        add(cbox0, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 590, -1, 40));
+        add(cbox0, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 590, -1, 40));
 
         cbox1.setText("1");
-        add(cbox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 590, -1, 40));
-        add(txtsotien1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 520, 240, 40));
+        add(cbox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 590, -1, 40));
+
+        txtsotien.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtsotienActionPerformed(evt);
+            }
+        });
+        add(txtsotien, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 520, 230, 40));
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel17.setText("Số tiền : ");
-        add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 520, 140, 40));
+        add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 520, 130, 40));
+
+        cbxhinhthucxl.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Khóa thẻ 1 tháng", "Khóa thẻ 2 tháng", "Bồi thường" }));
+        add(cbxhinhthucxl, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 440, 230, 40));
     }// </editor-fold>//GEN-END:initComponents
 
     private void button7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button7ActionPerformed
@@ -199,14 +233,49 @@ public class PanelXuLy extends javax.swing.JPanel {
         add.setLocationRelativeTo(null);
         add.setVisible(true);
     }//GEN-LAST:event_button7ActionPerformed
+    private void searchXuly() {
+    String keyword = txtsearch.getText().trim();
+    if (keyword.isEmpty()) {
+        // Nếu từ khóa tìm kiếm trống, hiển thị toàn bộ danh sách xử lý
+        displaytablexuly();
+    } else {
+        // Nếu có từ khóa tìm kiếm, thực hiện tìm kiếm trong danh sách xử lý
+        List<xuly> searchResult = xulyBUS.search(keyword);
+        if (!searchResult.isEmpty()) {
+            // Nếu có kết quả, hiển thị kết quả tìm kiếm trên bảng
+            displaySearchResult(searchResult);
+        } else {
+            // Nếu không có kết quả, hiển thị thông báo không tìm thấy kết quả
+            JOptionPane.showMessageDialog(this, "Không tìm thấy kết quả phù hợp.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+}
+    private void displaySearchResult(List<xuly> searchResult) {
+    DefaultTableModel model = (DefaultTableModel) tablexuly.getModel();
+    model.setRowCount(0); // Xóa dữ liệu hiện tại trong bảng
 
+    // Hiển thị kết quả tìm kiếm trên bảng
+    int stt = 1;
+    for (xuly x : searchResult) {
+        Object[] row = {
+            stt++,
+            x.getMaXL(),
+            x.getMaTV(),
+            x.getHinhThucXL(),
+            x.getSoTien(),
+            x.getNgayXL(),
+            x.getTrangThaiXL()
+        };
+        model.addRow(row);
+    }
+}
     private void button5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button5ActionPerformed
-        xulyDAL xulydel = new xulyDAL();
+        xulyBUS xulydel = new xulyBUS();
         int i = tablexuly.getSelectedRow();
         if (i >= 0) {
             int maxl = (Integer) tablexuly.getValueAt(i, 1);
             xuly delxl = xulydel.selectxulybymaxl(maxl);
-            if (xulydel.delete(delxl)) {
+            if (xulydel.deleteXL(delxl)) {
                 JOptionPane.showMessageDialog(this, "Xóa xử lý thành công");
             } else {
                 JOptionPane.showMessageDialog(this, "thất bại");
@@ -216,34 +285,95 @@ public class PanelXuLy extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "vui lòng chọn đối tượng trước khi xóa");
         }
     }//GEN-LAST:event_button5ActionPerformed
-
+    public static boolean isValidDate(String dateStr) {
+        try {
+            // Chuyển đổi chuỗi ngày thành đối tượng LocalDate với định dạng được chỉ định
+            LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return true; // Nếu chuyển đổi thành công, ngày hợp lệ
+        } catch (DateTimeParseException e) {
+            return false; // Nếu có lỗi, ngày không hợp lệ
+        }
+    }
     private void button8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button8ActionPerformed
-        xulyDAL xulyupdate = new xulyDAL();
+        xulyBUS xulyupdate = new xulyBUS();
         int i = tablexuly.getSelectedRow();
         if (i >= 0) {
             int maxl = (Integer) tablexuly.getValueAt(i, 1);
             int matv = Integer.parseInt(txtmatv.getText());
-            String hinhthuc = txthinhthuc.getText();
-            int sotien = Integer.parseInt(txtsotien.getText());
-            Date date;
-            try {
-                date = new SimpleDateFormat("dd/MM/yyyy").parse(txtngay.getText());
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(this, "Ngày không hợp lệ");
-                return;
+            String hinhthuc = (String) cbxhinhthucxl.getSelectedItem();
+
+            // Kiểm tra định dạng của ngày trước khi chuyển đổi
+            String ngay = txtngay.getText();
+            if (!isValidDate(ngay)) {
+                JOptionPane.showMessageDialog(this, "Định dạng ngày không hợp lệ!");
+                return; // Nếu định dạng không hợp lệ, dừng lại và không tiếp tục thực hiện
             }
+            Integer sotien =null;// Integer.parseInt(txtsotien.getText());
+            if(hinhthuc.equals("Bồi thường"))
+            {
+                sotien=Integer.parseInt(txtsotien.getText());
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            LocalDate localDate = LocalDate.parse(ngay, formatter);
+            Date date = java.sql.Date.valueOf(localDate);
+            System.out.println(date);
             int trangthai = cbox0.isSelected() ? 0 : 1;
-            if (xulyupdate.update(new xuly(maxl, matv, hinhthuc, sotien, date, trangthai))) {
+            if (xulyupdate.updateXL(new xuly(maxl, matv, hinhthuc, sotien, date, trangthai))) {
                 JOptionPane.showMessageDialog(this, "Sửa xử lý thành công");
             } else {
-                JOptionPane.showMessageDialog(this, "Sửa xử lý thất bại");
+                 JOptionPane.showMessageDialog(this, "Sửa xử lý fail");
             }
             displaytablexuly();
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn đối tượng trước khi sửa");
         }
-
     }//GEN-LAST:event_button8ActionPerformed
+     public static void Previousupdateshown() {
+        List<xuly> display = xulyBUS.selectAll();
+        xulyBUS upd= new xulyBUS();
+        for (xuly i : display) {
+            Date ngayxl = i.getNgayXL();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(ngayxl);
+            
+            switch (i.getHinhThucXL()) {
+                case "Khóa thẻ 1 tháng":
+                    if (isOneMonthBefore(calendar)) {
+                        i.setTrangThaiXL(0);
+                        upd.updateXL(i);
+                    }
+                    break;
+                case "Khóa thẻ 2 tháng":
+                    if (isTwoMonthsBefore(calendar)) {
+                        i.setTrangThaiXL(0);
+                        upd.updateXL(i);
+                    }
+                    break;
+            }
+        }
+    }
+
+    // Phương thức kiểm tra xem ngày hiện tại có trước ngày `calendar` một tháng không
+    private static boolean isOneMonthBefore(Calendar calendar) {
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.MONTH, -1);
+        return today.after(calendar);
+    }
+
+    // Phương thức kiểm tra xem ngày hiện tại có trước ngày `calendar` hai tháng không
+    private static boolean isTwoMonthsBefore(Calendar calendar) {
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.MONTH, -2);
+        return today.after(calendar);
+    }
+    private void button6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button6ActionPerformed
+        displaytablexuly();        // TODO add your handling code here:
+    }//GEN-LAST:event_button6ActionPerformed
+
+    private void txtsotienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtsotienActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtsotienActionPerformed
 
     private void addTableSelectionListener() {
         tablexuly.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -256,6 +386,54 @@ public class PanelXuLy extends javax.swing.JPanel {
                 }
             }
         });
+    }
+
+    private void addcbxgetItem() {
+        cbxhinhthucxl.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedOption = (String) cbxhinhthucxl.getSelectedItem();
+                if (selectedOption.equals("Bồi thường")) {
+                    txtsotien.setEditable(true); // Cho phép chỉnh sửa TextField khi chọn Option 3
+                } else {
+                    txtsotien.setEditable(false);
+                   txtsotien.setText("");// Ngăn chặn chỉnh sửa TextField khi chọn các Option khác
+                }
+            }
+        });
+
+    }
+    private void searchkeyword()
+    {
+     btnsearch.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            searchXuly();
+        }
+    });   
+    }
+
+    public void numberonly() {
+        txtsotien.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+                    e.consume();
+                    JOptionPane.showMessageDialog(null, "Chỉ được nhập số.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // Không cần thực hiện hành động gì trong phương thức này
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // Không cần thực hiện hành động gì trong phương thức này
+            }
+        });
+
     }
 
     private void addchecke0SelectionListener() {
@@ -284,13 +462,18 @@ public class PanelXuLy extends javax.swing.JPanel {
         String hinhthuc = (String) tablexuly.getValueAt(selectedRow, 3);
         System.out.println(hinhthuc);
         Integer sotien = (Integer) tablexuly.getValueAt(selectedRow, 4);
+        if (sotien == null) {
+            txtsotien.setText("");
+        } else {
+            txtsotien.setText(sotien + "");
+        }
         System.out.println(sotien);
         Date ngay = (Date) tablexuly.getValueAt(selectedRow, 5);
         int trangthai = (Integer) (tablexuly.getValueAt(selectedRow, 6));
         txtmatv.setText(matv + "");
-        txthinhthuc.setText(hinhthuc);
+        cbxhinhthucxl.setSelectedItem(hinhthuc);
         txtngay.setText(ngay + "");
-        txtsotien.setText(sotien + "");
+
         if (trangthai == 1) {
             cbox1.setSelected(true);
             cbox0.setSelected(false);
@@ -302,27 +485,26 @@ public class PanelXuLy extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Button button1;
+    private java.awt.Button btnsearch;
     private java.awt.Button button5;
+    private java.awt.Button button6;
     private java.awt.Button button7;
     private java.awt.Button button8;
     private javax.swing.JCheckBox cbox0;
     private javax.swing.JCheckBox cbox1;
+    private javax.swing.JComboBox<String> cbxhinhthucxl;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tablexuly;
-    private javax.swing.JTextField txthinhthuc;
     private javax.swing.JTextField txtmatv;
     private javax.swing.JTextField txtngay;
+    private javax.swing.JTextField txtsearch;
     private javax.swing.JTextField txtsotien;
-    private javax.swing.JTextField txtsotien1;
     // End of variables declaration//GEN-END:variables
 
 }
