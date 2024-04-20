@@ -42,7 +42,7 @@ public class ThongKeDAL {
             // Sử dụng HQL để truy vấn cơ sở dữ liệu và lấy danh sách ngày và số lượng bản
             // ghi tương ứng
             Query<Object[]> query = session
-                    .createQuery("SELECT tv.tgVao, COUNT(*) FROM thongtinsd as tv GROUP BY tv.tgVao", Object[].class);
+                    .createQuery("SELECT DATE(tv.tgVao), COUNT(*) FROM thongtinsd as tv GROUP BY tv.tgVao", Object[].class);
 
             List<Object[]> resultList = query.getResultList();
 
@@ -65,7 +65,7 @@ public class ThongKeDAL {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
             Query<Date> query = session.createQuery(
-                    "SELECT tv.tgVao FROM thongtinsd as tv WHERE tv.tgVao >= :start AND tv.tgVao <= :end GROUP BY tv.tgVao\r\n"
+                    "SELECT DATE(tv.tgVao) FROM thongtinsd as tv WHERE tv.tgVao >= :start AND tv.tgVao <= :end GROUP BY tv.tgVao\r\n"
                     + //
                     "",
                     Date.class);
@@ -84,7 +84,7 @@ public class ThongKeDAL {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
             Query<Object[]> query = session.createQuery(
-                    "SELECT tv.tgVao, COUNT(*) FROM thongtinsd as tv WHERE tv.tgVao BETWEEN :start AND :end GROUP BY tv.tgVao",
+                    "SELECT DATE(tv.tgVao), COUNT(*) FROM thongtinsd as tv WHERE tv.tgVao BETWEEN :start AND :end GROUP BY tv.tgVao",
                     Object[].class);
             query.setParameter("start", dateStart);
             query.setParameter("end", dateEnd);

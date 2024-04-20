@@ -43,4 +43,13 @@ public class ThongKeBUS {
     public int getTotalAmount() {
         return thongKeDAL.getTotalAmount();
     }
+
+    public List<String> getAllKhoa() {
+        return thongKeDAL.getAllKhoa();
+    }
+
+    public List<String> getAllNganh() {
+        return thongKeDAL.getAllNganh();
+    }
+
 }
