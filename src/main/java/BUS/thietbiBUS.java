@@ -25,10 +25,6 @@ public class thietbiBUS {
         thietbiDAL.add(tb);
     }
 
-    public static int getIdDevice() {
-        return thietbiDAL.getNextDeviceID();
-    }
-
     public static void deleteDevice(int deviceID, String name, String description) {
         thietbi tb = new thietbi(deviceID, name, description);
         
@@ -41,6 +37,10 @@ public class thietbiBUS {
         thietbiDAL.update(tb);
     }
 
+    public static int getIdDevice() {
+        return thietbiDAL.getNextDeviceID();
+    }
+    
     public static List<thietbi> getListByDeviceID(int deviceID) {
         return thietbiDAL.ListByDeviceID(deviceID);
     }
