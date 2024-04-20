@@ -240,4 +240,31 @@ public class thietbiDAL {
             JOptionPane.showMessageDialog(null, exception.getMessage());
         }
     }
+    public static List<thietbi> getDevicesChuaDuocMuon() {
+        List<thietbi> deviceList = new ArrayList<>();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tr = null;
+        try {
+            tr = session.beginTransaction();
+            Query query = session.createQuery("SELECT t FROM thietbi t WHERE t.maTB NOT IN (SELECT td.maTB FROM thongtinsd td WHERE td.tgTra IS NULL AND maTB != 0 AND maTB IS NOT NULL)");
+            deviceList = query.getResultList();
+            tr.commit();
+        } catch (HibernateException e) {
+            if (tr != null) {
+                tr.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return deviceList;
+    }
+    public static void main(String[] args) {
+        thietbiDAL dal = new thietbiDAL();
+         List<thietbi> deviceList = dal. getDevicesChuaDuocMuon();
+         
+         for (thietbi d : deviceList) {
+             System.out.println(d.getMaTB() + d.getTenTB());
+        }
+    }
 }

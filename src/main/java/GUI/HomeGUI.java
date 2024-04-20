@@ -7,6 +7,7 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -22,7 +23,8 @@ public class HomeGUI extends javax.swing.JFrame {
     /**
      * Creates new form HomeGUI2
      */
-    public HomeGUI() {
+    public HomeGUI() throws SQLException {
+        
         initComponents();
         setLocationRelativeTo(null);
         panelShow.setLayout(new CardLayout());
@@ -39,10 +41,10 @@ public class HomeGUI extends javax.swing.JFrame {
         pnThietBi.add(thietBi, BorderLayout.CENTER);
 
         //panel ket qua
-        JPanel pnXuLy = new JPanel();
-        PanelXuLy xuLy = new PanelXuLy();
-        pnXuLy.setLayout(new BorderLayout());
-        pnXuLy.add(xuLy, BorderLayout.CENTER);
+//        JPanel pnXuLy = new JPanel();
+//        PanelXuLy xuLy = new PanelXuLy();
+//        pnXuLy.setLayout(new BorderLayout());
+//        pnXuLy.add(xuLy, BorderLayout.CENTER);
 
         //panel thong ke
         JPanel pnThongKe = new JPanel();
@@ -53,7 +55,7 @@ public class HomeGUI extends javax.swing.JFrame {
         //
         panelShow.add(pnTV, "thanhVien");
         panelShow.add(pnThietBi, "thietBi");
-        panelShow.add(pnXuLy, "xuLy");
+//        panelShow.add(pnXuLy, "xuLy");
         panelShow.add(pnThongKe, "thongKe");
 
     }
@@ -321,7 +323,11 @@ public class HomeGUI extends javax.swing.JFrame {
                     Logger.getLogger(HomeGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                new HomeGUI().setVisible(true);
+                try {
+                    new HomeGUI().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(HomeGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

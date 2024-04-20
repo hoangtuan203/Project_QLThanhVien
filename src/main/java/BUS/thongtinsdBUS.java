@@ -18,31 +18,20 @@ public class thongtinsdBUS {
         return thongtinsdDAL.selectAll();
     }
 
-    public static void addDevice(thongtinsd tb) {
+    public static void add(thongtinsd tb) {
         thongtinsdDAL.add(tb);
     }
 
-    public static int getIdDevice() {
-        return thongtinsdDAL.getNextDeviceID();
-    }
     
-    public static void deleteDevice(thongtinsd tb){
+    
+    public static void delete(thongtinsd tb){
         thongtinsdDAL.delete(tb);
     }
     
-    public static void updateDevice(thongtinsd tb){
+    public static void update(thongtinsd tb){
         thongtinsdDAL.update(tb);
     }
-    
-    public static List<thongtinsd> getListByDeviceID(int deviceID){
-        return thongtinsdDAL.ListByDeviceID(deviceID);
-    }
-    
-    public static List<thongtinsd> getListByDeviceName(String deviceName){
-        return thongtinsdDAL.ListByDeviceName(deviceName);
-    }
-    
-    public static List<thongtinsd> getListByDeviceDescription(String deviceDescription){
-        return thongtinsdDAL.ListByDeviceDescription(deviceDescription);
-    }
+     public static void traTB(int maTB){
+         thongtinsdDAL.traTB(maTB);
+     }
 }

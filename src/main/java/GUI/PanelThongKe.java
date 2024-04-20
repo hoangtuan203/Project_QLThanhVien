@@ -13,9 +13,13 @@ import DAL.xuly;
 import DAL.xulyDAL;
 import java.awt.BorderLayout;
 import java.awt.Color;
+
+import java.sql.SQLException;
+
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import java.util.Date;
 import java.util.List;
 import javax.swing.GroupLayout;
@@ -47,6 +51,7 @@ import org.jfree.data.statistics.HistogramDataset;
  */
 public class PanelThongKe extends javax.swing.JPanel {
 
+
     PaneThanhVien pane = new PaneThanhVien();
     ThongKeBUS thongKeBUS = new ThongKeBUS();
     private thietbiBUS tbbus = new thietbiBUS();
@@ -56,10 +61,12 @@ public class PanelThongKe extends javax.swing.JPanel {
     private JSpinner dateSpinnerkt;
     private SpinnerDateModel spinnerDateModelkt;
 
+
     /**
      * Creates new form PanelThongKe
      */
-    public PanelThongKe() {
+    public PanelThongKe() throws SQLException {
+        this.pane = new PaneThanhVien();
         initComponents();
         loadTotalAmount();
         spinnerDateModelbd = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);

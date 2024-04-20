@@ -60,4 +60,7 @@ public class thietbiBUS {
     public static void importExcelToDatabase(File excelFile) {
         thietbiDAL.importExcelToDatabase(excelFile);
     }
+    public static List<thietbi> getDevicesChuaDuocMuon() {
+        return thietbiDAL.getDevicesChuaDuocMuon();
+    }
 }

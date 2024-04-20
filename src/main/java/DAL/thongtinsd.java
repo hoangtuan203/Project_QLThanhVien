@@ -40,17 +40,36 @@ public class thongtinsd implements Serializable {
     private Timestamp tgMuon;
     @Column(name = "TGTra")
     private Timestamp tgTra;
-
+    @Column(name = "TGDatCho")
+    private Timestamp tgDatCho;
     public thongtinsd() {
     }
 
-    public thongtinsd(int maTT, int maTV, int maTB, Timestamp tgVao, Timestamp tgMuon, Timestamp tgTra) {
+    
+    public thongtinsd(int maTT, int maTV, int maTB, Timestamp tgVao, Timestamp tgMuon, Timestamp tgTra, Timestamp tgDatCho) {
         this.maTT = maTT;
         this.maTV = maTV;
         this.maTB = maTB;
         this.tgVao = tgVao;
         this.tgMuon = tgMuon;
         this.tgTra = tgTra;
+        this.tgDatCho = tgDatCho;
+    }
+    public thongtinsd(int maTT, int maTV, Timestamp tgVao, Timestamp tgMuon, Timestamp tgTra, Timestamp tgDatCho) {
+        this.maTT = maTT;
+        this.maTV = maTV;
+        this.tgVao = tgVao;
+        this.tgMuon = tgMuon;
+        this.tgTra = tgTra;
+        this.tgDatCho = tgDatCho;
+    }
+
+    public Timestamp getTgDatCho() {
+        return tgDatCho;
+    }
+
+    public void setTgDatCho(Timestamp tgDatCho) {
+        this.tgDatCho = tgDatCho;
     }
 
     public int getMaTT() {
