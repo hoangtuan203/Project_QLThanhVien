@@ -51,7 +51,6 @@ import org.jfree.data.statistics.HistogramDataset;
  */
 public class PanelThongKe extends javax.swing.JPanel {
 
-
     PaneThanhVien pane = new PaneThanhVien();
     ThongKeBUS thongKeBUS = new ThongKeBUS();
     private thietbiBUS tbbus = new thietbiBUS();
@@ -60,7 +59,6 @@ public class PanelThongKe extends javax.swing.JPanel {
     private SpinnerDateModel spinnerDateModelbd;
     private JSpinner dateSpinnerkt;
     private SpinnerDateModel spinnerDateModelkt;
-
 
     /**
      * Creates new form PanelThongKe
@@ -371,17 +369,17 @@ public class PanelThongKe extends javax.swing.JPanel {
         String yearbd = datebd.split("-")[0];
         String monthbd = datebd.split("-")[1];
         String daybd = datebd.split("-")[2];
-        
+
         String timebd = tgbd.split(" ")[1];
         String hourbd = timebd.split(":")[0];
         String minbd = timebd.split(":")[1];
         String secbd = timebd.split(":")[2];
-        
+
         String datekt = tgkt.split(" ")[0];
         String yearkt = datekt.split("-")[0];
         String monthkt = datekt.split("-")[1];
         String daykt = datekt.split("-")[2];
-        
+
         String timekt = tgkt.split(" ")[1];
         String hourkt = timekt.split(":")[0];
         String minkt = timekt.split(":")[1];
@@ -414,42 +412,42 @@ public class PanelThongKe extends javax.swing.JPanel {
                 String hourktv = timektv.split(":")[0];
                 String minktv = timektv.split(":")[1];
                 String secktv = timektv.split(":")[2];
-                if(trangthai == 0) {
+                if (trangthai == 0) {
                     int l = 0;
                     if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
                         s++;
-                        if(Integer.parseInt(yearbd) > Integer.parseInt(yearktv)) {
+                        if (Integer.parseInt(yearbd) > Integer.parseInt(yearktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
-                                && Integer.parseInt(monthbd) > Integer.parseInt(monthktv))  {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) > Integer.parseInt(monthktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
-                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
-                                && Integer.parseInt(daybd) > Integer.parseInt(dayktv))  {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv)
+                                && Integer.parseInt(daybd) > Integer.parseInt(dayktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
-                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv)
                                 && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
-                                && Integer.parseInt(hourbd) > Integer.parseInt(hourktv))  {
+                                && Integer.parseInt(hourbd) > Integer.parseInt(hourktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
-                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv)
                                 && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
                                 && Integer.parseInt(hourbd) == Integer.parseInt(hourktv)
-                                && Integer.parseInt(minbd) > Integer.parseInt(minktv))  {
+                                && Integer.parseInt(minbd) > Integer.parseInt(minktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearktv) 
-                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv) 
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthktv)
                                 && Integer.parseInt(daybd) == Integer.parseInt(dayktv)
                                 && Integer.parseInt(hourbd) == Integer.parseInt(hourktv)
                                 && Integer.parseInt(minbd) == Integer.parseInt(minktv)
-                                && Integer.parseInt(secbd) > Integer.parseInt(secktv))  {
+                                && Integer.parseInt(secbd) > Integer.parseInt(secktv)) {
                             l = 1;
                         }
                     }
-                    
-                    if(l == 1) {
-                        if(model.getRowCount() != 0) {
+
+                    if (l == 1) {
+                        if (model.getRowCount() != 0) {
                             System.out.println(stt--);
                             model.removeRow(stt - 1);
                         }
@@ -464,64 +462,63 @@ public class PanelThongKe extends javax.swing.JPanel {
                         };
                         model.addRow(row);
                     }
-                }
-                else if (trangthai == 1){
+                } else if (trangthai == 1) {
                     int l = 0;
                     s++;
                     if (i.getTenTB().equalsIgnoreCase(tentb) && j.getMaTB() == i.getMaTB()) {
-                        if(Integer.parseInt(yearbd) < Integer.parseInt(yearbdv) 
-                            && Integer.parseInt(yearkt) >= Integer.parseInt(yearktv)) {
+                        if (Integer.parseInt(yearbd) < Integer.parseInt(yearbdv)
+                                && Integer.parseInt(yearkt) >= Integer.parseInt(yearktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
-                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
-                            && Integer.parseInt(monthbd) < Integer.parseInt(monthbdv) 
-                            && Integer.parseInt(monthkt) >= Integer.parseInt(monthktv)) {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearbdv)
+                                && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) < Integer.parseInt(monthbdv)
+                                && Integer.parseInt(monthkt) >= Integer.parseInt(monthktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
-                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
-                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
-                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
-                            && Integer.parseInt(daybd) < Integer.parseInt(daybdv) 
-                            && Integer.parseInt(daykt) >= Integer.parseInt(dayktv)) {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearbdv)
+                                && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv)
+                                && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                                && Integer.parseInt(daybd) < Integer.parseInt(daybdv)
+                                && Integer.parseInt(daykt) >= Integer.parseInt(dayktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
-                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
-                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
-                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
-                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
-                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
-                            && Integer.parseInt(hourbd) < Integer.parseInt(hourbdv) 
-                            && Integer.parseInt(hourkt) >= Integer.parseInt(hourktv)) {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearbdv)
+                                && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv)
+                                && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                                && Integer.parseInt(daybd) == Integer.parseInt(daybdv)
+                                && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) < Integer.parseInt(hourbdv)
+                                && Integer.parseInt(hourkt) >= Integer.parseInt(hourktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
-                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
-                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
-                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
-                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
-                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
-                            && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv) 
-                            && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
-                            && Integer.parseInt(minbd) < Integer.parseInt(minbdv) 
-                            && Integer.parseInt(minkt) >= Integer.parseInt(minktv)) {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearbdv)
+                                && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv)
+                                && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                                && Integer.parseInt(daybd) == Integer.parseInt(daybdv)
+                                && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv)
+                                && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
+                                && Integer.parseInt(minbd) < Integer.parseInt(minbdv)
+                                && Integer.parseInt(minkt) >= Integer.parseInt(minktv)) {
                             l = 1;
-                        } else if(Integer.parseInt(yearbd) == Integer.parseInt(yearbdv) 
-                            && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
-                            && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv) 
-                            && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
-                            && Integer.parseInt(daybd) == Integer.parseInt(daybdv) 
-                            && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
-                            && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv) 
-                            && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
-                            && Integer.parseInt(minbd) == Integer.parseInt(minbdv) 
-                            && Integer.parseInt(minkt) == Integer.parseInt(minktv)
-                            && Integer.parseInt(secbd) < Integer.parseInt(secbdv) 
-                            && Integer.parseInt(seckt) >= Integer.parseInt(secktv)) {
+                        } else if (Integer.parseInt(yearbd) == Integer.parseInt(yearbdv)
+                                && Integer.parseInt(yearkt) == Integer.parseInt(yearktv)
+                                && Integer.parseInt(monthbd) == Integer.parseInt(monthbdv)
+                                && Integer.parseInt(monthkt) == Integer.parseInt(monthktv)
+                                && Integer.parseInt(daybd) == Integer.parseInt(daybdv)
+                                && Integer.parseInt(daykt) == Integer.parseInt(dayktv)
+                                && Integer.parseInt(hourbd) == Integer.parseInt(hourbdv)
+                                && Integer.parseInt(hourkt) == Integer.parseInt(hourktv)
+                                && Integer.parseInt(minbd) == Integer.parseInt(minbdv)
+                                && Integer.parseInt(minkt) == Integer.parseInt(minktv)
+                                && Integer.parseInt(secbd) < Integer.parseInt(secbdv)
+                                && Integer.parseInt(seckt) >= Integer.parseInt(secktv)) {
                             l = 1;
                         }
                     }
-                    
-                    if(l == 1) {
-                        if(model.getRowCount() != 0) {
+
+                    if (l == 1) {
+                        if (model.getRowCount() != 0) {
                             System.out.println(stt--);
                             model.removeRow(stt - 1);
                         }
@@ -538,8 +535,8 @@ public class PanelThongKe extends javax.swing.JPanel {
                     }
                 }
             }
-            
-            if(i.getTenTB().equalsIgnoreCase(tentb) && s == 0) {
+
+            if (i.getTenTB().equalsIgnoreCase(tentb) && s == 0) {
                 Object[] row = {
                     stt++,
                     i.getMaTB(),
@@ -588,6 +585,7 @@ public class PanelThongKe extends javax.swing.JPanel {
         jComboBox3 = new javax.swing.JComboBox<>();
         jComboBox1 = new javax.swing.JComboBox<>();
         btnSearch = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         pnXuLy = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -803,6 +801,18 @@ public class PanelThongKe extends javax.swing.JPanel {
         );
 
         btnSearch.setText("Lọc");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
+
+        btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -821,12 +831,14 @@ public class PanelThongKe extends javax.swing.JPanel {
                         .addComponent(dateEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(56, 56, 56)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(222, 222, 222)
                         .addComponent(pnThanhVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -847,9 +859,11 @@ public class PanelThongKe extends javax.swing.JPanel {
                         .addGap(23, 23, 23)
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(500, Short.MAX_VALUE))
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(504, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Thành Viên", jPanel1);
@@ -934,6 +948,22 @@ public class PanelThongKe extends javax.swing.JPanel {
         searchDevice(datebd, datekt, (String) tentbcbb.getSelectedItem(), jComboBox5.getSelectedIndex());
     }//GEN-LAST:event_btnFind1ActionPerformed
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        Date dateStart = this.dateStart.getDate();
+        Date dateEnd = this.dateEnd.getDate();
+        if (dateStart == null || dateEnd == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày bắt đầu và ngày kết thúc !");
+        } else {
+            // Gọi phương thức showLineChart() với tham số là ngày bắt đầu và kết thúc đã
+            // chọn
+            showLineChart(dateStart, dateEnd);
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        showLineChart();
+    }//GEN-LAST:event_btnResetActionPerformed
+
     private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnFindActionPerformed
         Date dateStart = this.dateStart.getDate();
         Date dateEnd = this.dateEnd.getDate();
@@ -949,6 +979,7 @@ public class PanelThongKe extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ThietBiTable;
     private javax.swing.JButton btnFind1;
+    private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSearch;
     private com.toedter.calendar.JDateChooser dateEnd;
     private com.toedter.calendar.JDateChooser dateStart;

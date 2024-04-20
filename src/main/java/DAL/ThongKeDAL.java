@@ -22,7 +22,7 @@ public class ThongKeDAL {
             session.beginTransaction();
 
             // Sử dụng HQL (Hibernate Query Language) để truy vấn cơ sở dữ liệu
-            Query<Date> query = session.createQuery("SELECT tv.tgVao FROM thongtinsd tv", Date.class);
+            Query<Date> query = session.createQuery("SELECT DATE(tv.tgVao) FROM thongtinsd tv", Date.class);
             danhSachNgay = query.getResultList();
 
             // Kết thúc giao dịch
