@@ -303,13 +303,18 @@ public class PaneThietBi extends javax.swing.JPanel {
         if (name.isEmpty() || des.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
         } else {
-            int maTB = thietbiBUS.getIdDevice();
-            thietbi tb = new thietbi(maTB, name, des);
+            boolean deviceExists = false;
+            List<thietbi> allDevices = thietbiBUS.getAllDevice();
+            for (thietbi device : allDevices) {
+                if (device.getTenTB().equals(name) && device.getMoTaTB().equals(des)) {
+                    deviceExists = true;
+                    break;
+                }
+            }
 
-            List<thietbi> allDevice = thietbiBUS.getAllDevice();
-
-            if (!allDevice.contains(tb)) {
-                thietbiBUS.addDevice(tb);
+            if (!deviceExists) {
+                int maTB = thietbiBUS.getIdDevice();
+                thietbiBUS.addDevice(maTB, name, des);
                 JOptionPane.showMessageDialog(this, "Thêm thiết bị thành công");
                 jtfName.setText(null);
                 jtfDescription.setText(null);
@@ -318,7 +323,6 @@ public class PaneThietBi extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Thiết bị đã tồn tại trong danh sách");
             }
         }
-
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -348,8 +352,7 @@ public class PaneThietBi extends javax.swing.JPanel {
                     if (hasBorrowedDevices) {
                         JOptionPane.showMessageDialog(this, "Không thể xóa thiết bị đang được mượn");
                     } else {
-                        thietbi tb = new thietbi(MaTB, TenTB, MoTa);
-                        thietbiBUS.deleteDevice(tb);
+                        thietbiBUS.deleteDevice(MaTB, TenTB, MoTa);
                     }
                 }
 
@@ -374,9 +377,8 @@ public class PaneThietBi extends javax.swing.JPanel {
             if (nameDevice.isEmpty() || descriptionDevice.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
             } else {
-                thietbi tb = new thietbi(selectedDeviceID, nameDevice, descriptionDevice);
 
-                thietbiBUS.updateDevice(tb);
+                thietbiBUS.updateDevice(selectedDeviceID, nameDevice, descriptionDevice);
 
                 JOptionPane.showMessageDialog(this, "Sửa thiết bị thành công");
 

@@ -19,7 +19,9 @@ public class thietbiBUS {
         return thietbiDAL.selectAll();
     }
 
-    public static void addDevice(thietbi tb) {
+    public static void addDevice(int deviceID, String name, String description) {
+        thietbi tb = new thietbi(deviceID, name, description);
+
         thietbiDAL.add(tb);
     }
 
@@ -27,11 +29,15 @@ public class thietbiBUS {
         return thietbiDAL.getNextDeviceID();
     }
 
-    public static void deleteDevice(thietbi tb) {
+    public static void deleteDevice(int deviceID, String name, String description) {
+        thietbi tb = new thietbi(deviceID, name, description);
+        
         thietbiDAL.delete(tb);
     }
 
-    public static void updateDevice(thietbi tb) {
+    public static void updateDevice(int deviceID, String name, String description) {
+        thietbi tb = new thietbi(deviceID, name, description);
+        
         thietbiDAL.update(tb);
     }
 
