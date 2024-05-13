@@ -41,10 +41,10 @@ public class HomeGUI extends javax.swing.JFrame {
         pnThietBi.add(thietBi, BorderLayout.CENTER);
 
         //panel ket qua
-//        JPanel pnXuLy = new JPanel();
-//        PanelXuLy xuLy = new PanelXuLy();
-//        pnXuLy.setLayout(new BorderLayout());
-//        pnXuLy.add(xuLy, BorderLayout.CENTER);
+       JPanel pnXuLy = new JPanel();
+       PanelXuLy xuLy = new PanelXuLy();
+       pnXuLy.setLayout(new BorderLayout());
+       pnXuLy.add(xuLy, BorderLayout.CENTER);
 
         //panel thong ke
         JPanel pnThongKe = new JPanel();
@@ -55,7 +55,7 @@ public class HomeGUI extends javax.swing.JFrame {
         //
         panelShow.add(pnTV, "thanhVien");
         panelShow.add(pnThietBi, "thietBi");
-//        panelShow.add(pnXuLy, "xuLy");
+       panelShow.add(pnXuLy, "xuLy");
         panelShow.add(pnThongKe, "thongKe");
 
     }
