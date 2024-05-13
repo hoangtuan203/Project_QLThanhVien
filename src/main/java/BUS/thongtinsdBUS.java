@@ -22,16 +22,19 @@ public class thongtinsdBUS {
         thongtinsdDAL.add(tb);
     }
 
-    
-    
-    public static void delete(thongtinsd tb){
+    public static void delete(thongtinsd tb) {
         thongtinsdDAL.delete(tb);
     }
-    
-    public static void update(thongtinsd tb){
+
+    public static void update(thongtinsd tb) {
         thongtinsdDAL.update(tb);
     }
-     public static void traTB(int maTB){
-         thongtinsdDAL.traTB(maTB);
-     }
+
+    public static void traTB(int maTB) {
+        thongtinsdDAL.traTB(maTB);
+    }
+
+    public static void deleteByTGDatChoIsNotNull() {
+        thongtinsdDAL.deleteByTGDatChoIsNotNull();
+    }
 }

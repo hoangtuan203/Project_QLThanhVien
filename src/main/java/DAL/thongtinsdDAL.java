@@ -120,7 +120,22 @@ public class thongtinsdDAL {
             session.close();
         }
     }
-
+    public static  void deleteByTGDatChoIsNotNull() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.beginTransaction();
+            
+            // Sử dụng HQL (Hibernate Query Language) để xóa các hàng có dữ liệu trong cột TGDatCho
+            String hql = "delete from thongtinsd where TGDatCho is not null";
+            Query query = session.createQuery(hql);
+            int rowsAffected = query.executeUpdate();
+            
+            session.getTransaction().commit();
+            System.out.println(rowsAffected + " rows deleted from thongtinsd table.");
+        } catch (HibernateException ex) {
+            // Xử lý ngoại lệ
+            ex.printStackTrace();
+        }
+    }
     
     
     public static void main(String[] args) {

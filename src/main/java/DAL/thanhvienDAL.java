@@ -54,7 +54,7 @@ public class thanhvienDAL {
             tr = session.beginTransaction();
 
             session.save(t);
-            
+
             tr.commit();
             flag = true;
         } catch (HibernateException e) {
@@ -111,7 +111,7 @@ public class thanhvienDAL {
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-           Query query = session.createQuery("DELETE FROM thanhvien WHERE maTV = :maTV");
+            Query query = session.createQuery("DELETE FROM thanhvien WHERE maTV = :maTV");
             query.setParameter("maTV", maTV);
             int rowsAffected = query.executeUpdate();
 
@@ -129,6 +129,7 @@ public class thanhvienDAL {
         }
         return flag;
     }
+
     public static boolean checkMaTVExistsTTSD(int maTV) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -144,6 +145,7 @@ public class thanhvienDAL {
             session.close();
         }
     }
+
     public static boolean checkMaTVExistsXL(int maTV) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
@@ -159,51 +161,53 @@ public class thanhvienDAL {
             session.close();
         }
     }
+
     public static thanhvien getThanhVienByMaTV(int maTV) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             thanhvien thanhVien = session.get(thanhvien.class, maTV);
-            return thanhVien; 
+            return thanhVien;
         } catch (Exception e) {
             e.printStackTrace();
-            return null; 
+            return null;
         } finally {
             session.close();
         }
     }
-    public static boolean checkThanhVien(int maTV){
-      Session session = HibernateUtil.getSessionFactory().openSession();
+
+    public static boolean checkThanhVien(int maTV) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Query query = session.createQuery(
-                "SELECT COUNT(*) FROM thanhvien WHERE maTV = :maTV ",
-                Long.class
-            );
+                    "SELECT COUNT(*) FROM thanhvien WHERE maTV = :maTV ",
+                    Long.class);
             query.setParameter("maTV", maTV);
-            Long count =(Long) query.getSingleResult();
+            Long count = (Long) query.getSingleResult();
             return count > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     public static boolean checkViPham(int maTV) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
             Query query = session.createQuery(
-                "SELECT COUNT(*) FROM xuly WHERE maTV = :maTV AND TrangThaiXL = 1",
-                Long.class
-            );
+                    "SELECT COUNT(*) FROM xuly WHERE maTV = :maTV AND TrangThaiXL = 1",
+                    Long.class);
             query.setParameter("maTV", maTV);
-            Long count =(Long) query.getSingleResult();
+            Long count = (Long) query.getSingleResult();
             return count > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     public static boolean deleteThanhVienByTriggerYear(String triggerYear) {
         boolean flag = false;
-         Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -228,6 +232,7 @@ public class thanhvienDAL {
         }
         return flag;
     }
+
     public static boolean importFromExcel(File file) {
         boolean flag = false;
         try {
@@ -236,7 +241,7 @@ public class thanhvienDAL {
 
             Sheet sheet = workbook.getSheetAt(0);
             DataFormatter dataFormatter = new DataFormatter();
-            
+
             FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
             // Mở session từ SessionFactory
@@ -255,7 +260,7 @@ public class thanhvienDAL {
                 String HoTen = dataFormatter.formatCellValue(row.getCell(1));
                 String Khoa = dataFormatter.formatCellValue(row.getCell(2));
                 String Nganh = dataFormatter.formatCellValue(row.getCell(3));
-                String SDT = dataFormatter.formatCellValue(row.getCell(4), formulaEvaluator); 
+                String SDT = dataFormatter.formatCellValue(row.getCell(4), formulaEvaluator);
                 String Password = dataFormatter.formatCellValue(row.getCell(5));
                 String Email = dataFormatter.formatCellValue(row.getCell(6));
 
@@ -279,23 +284,25 @@ public class thanhvienDAL {
         }
         return flag;
     }
-    public static void main(String args[])
-    {
+
+
+    public static void main(String args[]) {
         thanhvienDAL dal = new thanhvienDAL();
-        //Vegetable obj = dal.getVegetable(1);
-        //System.out.println(obj.getVegetableName());
-//        List list = dal.getAll();
-//        
-//        for (Iterator iterator = list.iterator(); iterator.hasNext();){
-//             thanhvien t = (thanhvien) iterator.next(); 
-//             System.out.println("ID: " + t.getMaTV()); 
-//             System.out.println("Name: " + t.getHoTen()); 
-//             
-//          }
-//        System.out.println(dal.delete(2));
-//        dal.deleteThanhVienByTriggerYear("11");
-            System.out.println("1120010007:"+dal.checkThanhVien(1120010007
-) );
-    
+        // Vegetable obj = dal.getVegetable(1);
+        // System.out.println(obj.getVegetableName());
+        // List list = dal.getAll();
+        //
+        // for (Iterator iterator = list.iterator(); iterator.hasNext();){
+        // thanhvien t = (thanhvien) iterator.next();
+        // System.out.println("ID: " + t.getMaTV());
+        // System.out.println("Name: " + t.getHoTen());
+        //
+        // }
+        // System.out.println(dal.delete(2));
+        // dal.deleteThanhVienByTriggerYear("11");
+        System.out.println("1120010007:" + dal.checkThanhVien(1120010007));
+
     }
+
+ 
 }

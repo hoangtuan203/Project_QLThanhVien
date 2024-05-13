@@ -44,6 +44,7 @@ public class thanhvienBUS {
     public static boolean deleteThanhVienByTriggerYear(String triggerYear){
        return thanhvienDAL.deleteThanhVienByTriggerYear(triggerYear);
     }
+  
     public static void main(String[] args) {
         thanhvienBUS t = new thanhvienBUS();
         System.out.println( t.delete(2));

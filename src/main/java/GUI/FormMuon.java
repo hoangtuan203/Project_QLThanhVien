@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Administrator
@@ -208,8 +210,10 @@ public class FormMuon extends javax.swing.JFrame {
         int maTTSD = Integer.parseInt(generateRandomKey());
         int maTV = Integer.parseInt((String)cbbTV.getSelectedItem());
         int maTB = Integer.parseInt((String)cbbTB.getSelectedItem());
+        ttsdBUS.deleteByTGDatChoIsNotNull();
         thongtinsd ttsd = new thongtinsd(maTTSD, maTV, maTB, timestamp, timestamp, null, null);
         ttsdBUS.add(ttsd);
+        JOptionPane.showMessageDialog(null, "Mượn thiết bị thành công");
         
         
     }
