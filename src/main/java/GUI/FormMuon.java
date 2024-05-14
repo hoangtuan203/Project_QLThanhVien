@@ -210,7 +210,7 @@ public class FormMuon extends javax.swing.JFrame {
         int maTTSD = Integer.parseInt(generateRandomKey());
         int maTV = Integer.parseInt((String)cbbTV.getSelectedItem());
         int maTB = Integer.parseInt((String)cbbTB.getSelectedItem());
-        ttsdBUS.deleteByTGDatChoIsNotNull();
+        ttsdBUS.deleteByTGDatChoIsNotNull(maTTSD,maTV,maTB);
         thongtinsd ttsd = new thongtinsd(maTTSD, maTV, maTB, timestamp, timestamp, null, null);
         ttsdBUS.add(ttsd);
         JOptionPane.showMessageDialog(null, "Mượn thiết bị thành công");

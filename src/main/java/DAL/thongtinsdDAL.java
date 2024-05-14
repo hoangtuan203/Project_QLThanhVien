@@ -97,17 +97,20 @@ public class thongtinsdDAL {
             session.close();
         }
     }
+
     public static void traTB(int maTB) {
         List<thongtinsd> thongtinsdList = new ArrayList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-            Query query = session.createQuery("SELECT td FROM thongtinsd td WHERE td.tgTra IS NULL AND maTB != 0 AND maTB IS NOT NULL AND maTB =: maTB",thongtinsd.class);
+            Query query = session.createQuery(
+                    "SELECT td FROM thongtinsd td WHERE td.tgTra IS NULL AND maTB != 0 AND maTB IS NOT NULL AND maTB =: maTB",
+                    thongtinsd.class);
             query.setParameter("maTB", maTB);
             thongtinsdList = query.getResultList();
             thongtinsd ttsd = thongtinsdList.get(0);
-             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             ttsd.setTgTra(timestamp);
             update(ttsd);
             tr.commit();
@@ -120,15 +123,18 @@ public class thongtinsdDAL {
             session.close();
         }
     }
-    public static  void deleteByTGDatChoIsNotNull() {
+
+    public static void deleteByTGDatChoIsNotNull(int maTT,int maTV,int maTB) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            
-            // Sử dụng HQL (Hibernate Query Language) để xóa các hàng có dữ liệu trong cột TGDatCho
-            String hql = "delete from thongtinsd where TGDatCho is not null";
+
+            // Sử dụng HQL (Hibernate Query Language) để xóa các hàng có dữ liệu trong cột
+            // TGDatCho
+            String hql = "delete from ThongTinSD where MaTT = :maTT and MaTV =:maTV and MaTB = :maTB and TGDatCho is not null";
             Query query = session.createQuery(hql);
+            query.setParameter("maTT", maTT);
             int rowsAffected = query.executeUpdate();
-            
+
             session.getTransaction().commit();
             System.out.println(rowsAffected + " rows deleted from thongtinsd table.");
         } catch (HibernateException ex) {
@@ -136,10 +142,9 @@ public class thongtinsdDAL {
             ex.printStackTrace();
         }
     }
-    
-    
+
     public static void main(String[] args) {
-       Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         System.out.println(timestamp);
         thongtinsdDAL dal = new thongtinsdDAL();
         dal.traTB(1000002);
