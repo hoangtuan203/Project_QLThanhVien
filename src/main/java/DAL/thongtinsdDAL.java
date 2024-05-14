@@ -124,15 +124,16 @@ public class thongtinsdDAL {
         }
     }
 
-    public static void deleteByTGDatChoIsNotNull(int maTT,int maTV,int maTB) {
+    public static void deleteByTGDatChoIsNotNull(int maTV,int maTB) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
 
             // Sử dụng HQL (Hibernate Query Language) để xóa các hàng có dữ liệu trong cột
             // TGDatCho
-            String hql = "delete from ThongTinSD where MaTT = :maTT and MaTV =:maTV and MaTB = :maTB and TGDatCho is not null";
+            String hql = "delete from thongtinsd where  maTV =:maTV and maTB = :maTB and tgDatCho is not null";
             Query query = session.createQuery(hql);
-            query.setParameter("maTT", maTT);
+            query.setParameter("maTV", maTV);
+            query.setParameter("maTB", maTB);
             int rowsAffected = query.executeUpdate();
 
             session.getTransaction().commit();

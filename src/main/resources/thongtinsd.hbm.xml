@@ -14,6 +14,6 @@
         <property name="tgMuon" column="TGMuon" type="timestamp"/>
         
         <property name="tgTra" column="TGTra" type="timestamp"/>
-
+         <property name="tgDatCho" column="TGDatCho" type="timestamp"/>
     </class>
 </hibernate-mapping>

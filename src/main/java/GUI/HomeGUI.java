@@ -56,7 +56,7 @@ public class HomeGUI extends javax.swing.JFrame {
         panelShow.add(pnTV, "thanhVien");
         panelShow.add(pnThietBi, "thietBi");
        panelShow.add(pnXuLy, "xuLy");
-        panelShow.add(pnThongKe, "thongKe");
+//        panelShow.add(pnThongKe, "thongKe");
 
     }
 

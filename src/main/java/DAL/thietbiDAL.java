@@ -246,7 +246,7 @@ public class thietbiDAL {
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
-            Query query = session.createQuery("SELECT t FROM thietbi t WHERE t.maTB NOT IN (SELECT td.maTB FROM thongtinsd td WHERE td.tgTra IS NULL AND maTB != 0 AND maTB IS NOT NULL)");
+            Query query = session.createQuery("SELECT t FROM thietbi t WHERE t.maTB NOT IN (SELECT td.maTB FROM thongtinsd td WHERE td.tgDatCho IS NULL AND  td.tgTra IS NULL AND maTB != 0 AND maTB IS NOT NULL)");
             deviceList = query.getResultList();
             tr.commit();
         } catch (HibernateException e) {

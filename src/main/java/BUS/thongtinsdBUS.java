@@ -34,7 +34,7 @@ public class thongtinsdBUS {
         thongtinsdDAL.traTB(maTB);
     }
 
-    public static void deleteByTGDatChoIsNotNull(int maTT,int maTV,int maTB) {
-        thongtinsdDAL.deleteByTGDatChoIsNotNull(maTT,maTV,maTB);
+    public static void deleteByTGDatChoIsNotNull(int maTV,int maTB) {
+        thongtinsdDAL.deleteByTGDatChoIsNotNull(maTV,maTB);
     }
 }
